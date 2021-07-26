@@ -1,0 +1,362 @@
+name: AmavyaAdmin
+api-version: 1.17
+version: ${project.version}
+main: me.sanjy33.amavyaadmin.AmavyaAdmin
+softdepend: [Multiverse-Core, AmavyaParticleLib]
+depend: [LuckPerms]
+description: A custom server administration plugin!
+permissions:
+  aadmin.*:
+    description: Gives access to all AmavyaAdmin commands
+    children:
+      aadmin.setspawn: true
+      aadmin.spawn: true
+      aadmin.motd: true
+      aadmin.back: true
+      aadmin.tpa: true
+      aadmin.mute: true
+      aadmin.unmute: true
+      aadmin.reload: true
+      aadmin.vanish: true
+  aadmin.moderator:
+    description: Gives moderator access
+    children:
+      aadmin.mute: true
+      aadmin.unmute: true
+  aadmin.reload:
+    description: Allows use of /aareload
+    default: op
+  aadmin.setspawn:
+    description: Allows you to set the spawnpoint.
+    default: false
+  aadmin.spawn:
+    description: Allows you to warp to the spawnpoint.
+    default: true
+  aadmin.spawn.instant:
+    default: op
+  aadmin.motd:
+    description: Allows you to set the message of the day
+    default: false
+  aadmin.timeset:
+    description: Allows use of the /ts command.
+    default: op
+  aadmin.back:
+    description: Allows use of the /back command.
+    default: op
+  aadmin.tpa:
+    description: Allows use of the /tpa command.
+    default: op
+  aadmin.fly:
+    description: Allows use of /fly
+    default: op
+  aadmin.fly.other:
+    description: Allows use of /fly <player>
+    default: op
+  aadmin.warp.warp:
+    description: Allows usage of /warp
+    default: true
+  aadmin.warp.create:
+    description: Allows use of /createwarp
+    default: op
+  aadmin.warp.delete:
+    description: Allows use of /deletewarp
+    default: op
+  aadmin.mute:
+    description: Allows use of /mute
+    default: op
+  aadmin.mute.noreason:
+    description: Allows muting without reason
+    default: op
+  aadmin.unmute:
+    description: Allows use of /unmute
+    default: op
+  aadmin.staffapps.check:
+    description: Allows checking staff apps
+    default: op
+  aadmin.staffapps.delete:
+    description: Allows deleting staff apps
+    default: op
+  aadmin.staffapps.apply:
+    description: Allows applying
+    default: true
+  aadmin.staffapps.accept:
+    description: Allows accepting of applications
+    default: op
+  aadmin.staffapps.deny:
+    description: Allows denying of applications
+    default: op
+  aadmin.lockdown:
+    description: Allows use of /lockdown
+    default: op
+  aadmin.lockdown.bypass:
+    description: Allows a user to login while the server is under lockdown
+    default: op
+  aadmin.jail.jail:
+    default: op
+  aadmin.jail.create:
+    default: op
+  aadmin.jail.delete:
+    default: op
+  aadmin.jail.deleteall:
+    default: op
+  aadmin.jail.unjail:
+    default: op
+  aadmin.jail.unjailall:
+    default: op
+  aadmin.jail.jailstatus:
+    default: true
+  aadmin.jail.jailstatus.other:
+    default: op
+  aadmin.jail.addtime:
+    default: op
+  aadmin.jail.subtracttime:
+    default: op
+  aadmin.jail.jaillist:
+    default: op
+  aadmin.home.home:
+    default: true
+  aadmin.home.other:
+    default: op
+  aadmin.home.set:
+    default: true
+  aadmin.home.delete:
+    default: true
+  aadmin.home.delete.other:
+    default: op
+  aadmin.home.list:
+    default: op
+  aadmin.home.instant:
+    default: op
+  aadmin.home.bed:
+    default: op
+  aadmin.rules:
+    default: true
+  aadmin.kits.starter:
+    default: true
+  aadmin.setkit:
+    default: op
+  aadmin.tips:
+    default: true
+  aadmin.vanish:
+    default: op
+  aadmin.vanish.silentjoin:
+    default: op
+  aadmin.vanish.silentquit:
+    default: op
+  aadmin.vanish.fakejoin:
+    default: op
+  aadmin.vanish.fakequit:
+    defualt: op
+  aadmin.vanish.silentnotify:
+    default: op
+  aadmin.vanish.seevanished:
+    default: op
+  aadmin.aliases:
+    default: op
+  aadmin.spy:
+    default: op
+  aadmin.survival:
+    default: true
+  aadmin.survival.nowarmup:
+    default: op
+  aadmin.survival.set:
+    default: op
+  aadmin.creative:
+    default: true
+  aadmin.creative.nowarmup:
+    default: op
+  aadmin.creative.set:
+    default: op
+  aadmin.pvp:
+    default: true
+  aadmin.pvp.nowarmup:
+    default: op
+  aadmin.pvp.set:
+    default: op
+  aadmin.hub:
+    default: true
+  aadmin.hub.nowarmup:
+    default: op
+  aadmin.hub.set:
+    default: op
+  aadmin.inventory.store:
+    default: op
+  aadmin.inventory.restore:
+    default: op
+  aadmin.inventory.clear:
+    default: op
+commands:
+  tp:
+    description: Override for vanilla tp, defaults to tpa if not op
+    usage: /tp
+  fakejoin:
+    description: Fake join
+    usage: /fakejoin
+  fakequit:
+    description: Fake quit
+    usage: /fakequit
+  silentjoin:
+    description: Join silently
+    usage: /silentjoin
+  silentquit:
+    description: Quit silently
+    usage: /silentquit
+  vanish:
+    description: Turn yourself invisible
+    usage: /vanish
+  tips:
+    description: Toggles showing periodic tips.
+    usage: /tips
+  setkit:
+    description: Sets the starter kit players get when the join.
+    usage: /setkit
+  rules:
+    description: Shows rules
+    usage: /rules
+  home:
+    description: Teleports player to their home.
+    usage: /home
+  sethome:
+    aliases: [homeset]
+    description: Sets a player's home.
+    usage: /sethome
+  deletehome:
+    aliases: [homedelete,resethome,homereset]
+    description: Deletes a player's home.
+    usage: /deletehome
+  listhome:
+    aliases: [homelist]
+    description: Lists all player homes.
+    usage: /listhome
+  jail:
+    description: Jails a player.
+    usage: /jail <player> <time> <reason>
+  jailcreate:
+    description: Creates a prison cell.
+    usage: /jailcreate
+  jaildelete:
+    description: Deletes a particular jail cell.
+    usage: /jaildelete <cellID>
+  jaildeleteall:
+    description: Deletes all jail cells.
+    usage: /jaildeleteall
+  unjail:
+    description: Unjails a player.
+    usage: /unjail <player>
+  unjailall:
+    description: Unjails all players.
+    usage: /unjailall
+  jailstatus:
+    description: Checks the jail status of a player.
+    usage: /jailstatus [player]
+  jailaddtime:
+    description: Adds time to a player's jail sentence.
+    usage: /jailaddtime <player> <time>
+  jailsubtracttime:
+    description: Subtracts time from a player's jail sentence.
+    usage: /jailsubtracttime <player> <time>
+  jaillist:
+    description: Gets a list of all jail cells.
+    usage: /jaillist
+  lockdown:
+    description: Toggles lockdown status of the server
+    usage: /lockdown
+  apply:
+    aliases: [staffapply, staffapp, application, getstaff, getmod, modapplication]
+    description: Apply for staff
+    usage: /apply
+  aareload:
+    aliases: [amavyaadminreload, reloadaa]
+    description: Reloads AmavyaAdmin config
+    usage: /aareload
+  mute:
+    aliases: [muteplayer]
+    description: Mutes a player
+    usage: /mute <player> <time> <reason>
+  unmute:
+    aliases: [unmuteplayer]
+    description: Unmutes a player
+    usage: /unmute <player>
+  warp:
+    aliases: []
+    description: Teleports you to a warp point
+    usage: /warp <warpname>
+  createwarp:
+    aliases: [cwarp]
+    description: Creates a warp point
+    usage: /createwarp <warpname>
+  deletewarp:
+    aliases: [dwarp, removewarp, rwarp]
+    description: Deletes a warp point
+    usage: /deletewarp <warpname>
+  fly:
+    aliases: [togglefly]
+    description: Allows you to fly
+    usage: /fly [player]
+  setspawnwarp:
+    aliases: [spawnsetwarp]
+    description: Sets the warp point for spawn for the current world.
+    usage: /setspawnwarp
+  setspawn:
+    aliases: [spawnset]
+    description: Sets the spawn for the current world.
+    usage: /setspawn
+  spawn:
+    aliases: [warpspawn]
+    description: Warps the player to the world's spawnpoint
+    usage: /spawn
+  motd:
+    aliases: [messageoftheday]
+    description: Sets the message of the day
+    usage: /motd <motd>
+  ts:
+    aliases: [timeset]
+    description: Sets the time in the current or a specified world.
+    usage: /ts <time> [world]
+  back:
+    aliases: [goback]
+    description: Teleports you back to your last death point
+    usage: /back
+  tpa:
+    aliases: [tpask]
+    description: Asks to teleport to a player
+    usage: /tpa <player>
+  tpaccept:
+    description: Accepts a request for a player to teleport to you
+    usage: /tpaccept
+  tpdeny:
+    description: Denies a request for a player to teleport to you
+    usage: /tpdeny
+  knownaliases:
+    description: Lists known aliases for a given username
+    usage: /knownaliases <name>
+  spy:
+    description: Spy
+    usage: /spy
+  survival:
+    description: Teleports you to the survival world.
+    usage: /survival
+  creative:
+    description: Teleports you to the creative world.
+    usage: /creative
+  pvp:
+    description: Teleports you to the PvP world.
+    usage: /pvp
+  hub:
+    description: Teleports you to the Hub world.
+    usage: /hub
+  setsurvivalwarp:
+    description: Sets the location of the /survival command.
+    usage: /setsurvivalwarp
+  setcreativewarp:
+    description: Sets the location of the /creative command.
+    usage: /setcreativewarp
+  setpvpwarp:
+    description: Sets the location of the /pvp command.
+    usage: /setpvpwarp
+  sethubwarp:
+    description: Sets the location of the /hub command.
+    usage: /sethubwarp
+  inventory:
+    description: Inventory storage command.
+    usage: /inventory <save|load|delete>

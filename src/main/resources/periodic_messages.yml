@@ -1,0 +1,9 @@
+disabled: []
+periodicmessages:
+  default:
+    frequency: '5s'
+    permission: 'default'
+    mode: 0
+    messages:
+      - 'Default Message'
+      - 'Default Message 2'

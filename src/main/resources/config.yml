@@ -1,0 +1,69 @@
+#Config for AmavyaAdmin
+debug: false
+lockdown: false
+warpwarmup: 3
+mutedcommands:
+  - tell
+  - msg
+  - w
+  - me
+jailBlockedCommands:
+  - tp
+  - tpa
+  - tpaccept
+  - home
+  - spawn
+  - hub
+  - kill
+sleepPercentageRequired: 0.5
+homes:
+  max: 1
+  warpwarmup: 3
+messages:
+  lockdown: 'The server is under lockdown! Come back later!'
+  motd: "[{\"text\":\"Welcome to the Server!\"}]"
+  tipsdisabled: '§cTips are disabled! Enable them again with §b/tips'
+  tipsenabled: '§aTips are enabled! You can disable them with §b/tips'
+  muted: '§cYou are muted for %time%. Reason: %reason%'
+seperateGameModeInventories: true
+rules:
+  - 'Server Rules:'
+  - ' 1. No Client Mods'
+  - ' 2. No Chat Spam'
+  - ' 3. Dont ask for staff, use /apply'
+  - ' 4. Have Fun!'
+  
+staffapplications:
+  permissiongroups:
+    staff: mod
+    default: default
+  messages:
+    accepted: "&b[Staff Applications] &fCongrats! Your staff application was &aaccepted&f! You are now a &bmoderator&f!"
+    inprogress: "&b[Staff Applications] &fYour staff application is under review."
+    denied: "&b[Staff Applications] &fUnfortunately your staff application was &cdenied&f."
+  pages:
+    - "&d&lStaff Application&r\n
+    Email Address: \n\n\n
+    Age: \n\n
+    \n\n\n\n\n\n
+    Please Fill Out Next Pages"
+    - "&d&lStaff Application&r\n
+    Bukkit/Spigot Plugin Experience:\n
+    \n\n\n\n\n\n\n\n\n
+    Please Fill Out Next Pages"
+    - "&d&lStaff Application&r\n
+    Prior Staff Experience:\n
+    \n\n\n\n\n\n\n\n\n
+    Please Fill Out Next Pages"
+    - "&d&lStaff Application&r\n
+    History On This Server:\n
+    \n\n\n\n\n\n\n\n\n
+    Please Fill Out Next Pages"
+    - "&d&lStaff Application&r\n
+    Previous Bans and Reasons:\n
+    \n\n\n\n\n\n\n\n\n
+    Please Fill Out Next Pages"
+    - "&d&lStaff Application&r\n
+    Other Important Info:\n
+    \n\n\n\n\n\n\n
+    Use &b/apply submit&r to submit your application."
