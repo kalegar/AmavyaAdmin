@@ -13,6 +13,7 @@ import me.sanjy33.amavyaadmin.AmavyaAdmin;
 
 public class PeriodicMessage extends BukkitRunnable{
 	private List<String> messages;
+	private final AmavyaAdmin plugin;
 	private final long frequency;
 	private final String permission;
 	private final String name;
@@ -31,6 +32,7 @@ public class PeriodicMessage extends BukkitRunnable{
 			this.permission = null;
 		}
 		this.mode = mode;
+		this.plugin = plugin;
 		runTaskTimer(plugin,1L,frequency);
 	}
 	
@@ -87,7 +89,7 @@ public class PeriodicMessage extends BukkitRunnable{
 			}
 		}
 		if (message==null){
-			System.out.println("[AmavyaAdmin] Error getting random message for timed message group " + name);
+			plugin.getLogger().warning("[AmavyaAdmin] Error getting random message for timed message group " + name);
 			return;
 		}
 		if (message.length() > 0){
@@ -100,7 +102,7 @@ public class PeriodicMessage extends BukkitRunnable{
 				}
 			}
 		}else{
-			System.out.println("[AmavyaAdmin] Error getting random message for timed message group " + name);
+			plugin.getLogger().warning("[AmavyaAdmin] Error getting random message for timed message group " + name);
 		}
 	}
 }

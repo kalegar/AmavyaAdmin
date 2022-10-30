@@ -74,7 +74,10 @@ public class AAListener implements Listener{
 				plugin.muteManager.unMute(mp);
 				return;
 			}
-			String msg = plugin.mutedMessage.replaceAll("%time%",TimeParser.parseLong(time, false)).replaceAll("%reason%",mp.getReason());
+			String timeStr = TimeParser.parseLong(time, false);
+			if (timeStr == null)
+				timeStr = "0 seconds";
+			String msg = plugin.mutedMessage.replaceAll("%time%",timeStr).replaceAll("%reason%",mp.getReason());
 			event.getPlayer().sendMessage(msg);
 			event.setCancelled(true);
 		}
@@ -148,7 +151,8 @@ public class AAListener implements Listener{
 				return;
 			}
 		}
-		event.allow();
+		if (!p.isBanned())
+			event.allow();
 	}
 	
 //////Update to UUID when bukkit supports it!!!

@@ -68,14 +68,14 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 	@Override
 	public void onDisable() {
 		save();
-		System.out.println(ChatColor.GREEN + "[AmavyaAdmin] AmavyaAdmin Disabled");
+		getLogger().info(ChatColor.GREEN + "[AmavyaAdmin] AmavyaAdmin Disabled");
 	}
 
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
 		if (!setupLuckPerms()) {
-        	System.out.println(ChatColor.RED + "[AmavyaAdmin] ERROR: Failed to load LuckPerms API!");
+        	getLogger().info(ChatColor.RED + "[AmavyaAdmin] ERROR: Failed to load LuckPerms API!");
         }
 		periodicMessageManager = new PeriodicMessageManager(this);
 		messageManager = new MessageManager(this);
@@ -95,7 +95,7 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 		registerCommands();
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		PluginDescriptionFile pdfFile = this.getDescription();
-        System.out.println( ChatColor.GREEN + pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
+        getLogger().info( ChatColor.GREEN + pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
 	}
 	
 	private boolean setupLuckPerms() {
@@ -153,7 +153,7 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 	    if (this.getConfig().contains("kits.starter")){
 	    	starterKit = Inventory.load(this.getConfig().getConfigurationSection("kits.starter"));
 	    }else {
-			System.out.println("[AmavyaAdmin] Did not find starter kit in config.yml Set one with /setkit in-game");
+			getLogger().info("[AmavyaAdmin] Did not find starter kit in config.yml Set one with /setkit in-game");
 		}
 
 	}

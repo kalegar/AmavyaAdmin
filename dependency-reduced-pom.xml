@@ -4,7 +4,7 @@
   <groupId>me.sanjy33</groupId>
   <artifactId>AmavyaAdmin</artifactId>
   <name>AmavyaAdmin</name>
-  <version>3.9.16</version>
+  <version>3.9.17</version>
   <description>A custom server administration plugin!</description>
   <build>
     <defaultGoal>clean package</defaultGoal>
@@ -54,13 +54,9 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.16.4-R0.1-SNAPSHOT</version>
+      <version>1.19.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
-        <exclusion>
-          <artifactId>commons-lang</artifactId>
-          <groupId>commons-lang</groupId>
-        </exclusion>
         <exclusion>
           <artifactId>guava</artifactId>
           <groupId>com.google.guava</groupId>
@@ -82,13 +78,13 @@
     <dependency>
       <groupId>net.luckperms</groupId>
       <artifactId>api</artifactId>
-      <version>5.3</version>
+      <version>5.4</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>me.sanjy33</groupId>
       <artifactId>AmavyaParticleLib</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <version>1.2-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
