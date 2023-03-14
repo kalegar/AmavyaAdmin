@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
+import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -15,11 +17,12 @@ public class VanishManager extends SystemManager{
 	
 	private final AmavyaAdmin plugin;
 	private final String fileName = "vanish.yml";
-	private VanishCommandExecutor commandExecutor;
 
-	private Set<Player> invisiblePlayers = new HashSet<Player>();
-	private Set<UUID> silentJoinPlayers = new HashSet<UUID>();
-	private Set<UUID> silentQuitPlayers = new HashSet<UUID>();
+	private final String[] commands = {"vanish","silentjoin","silentquit","fakejoin","fakequit"};
+
+	private final Set<Player> invisiblePlayers = new HashSet<Player>();
+	private final Set<UUID> silentJoinPlayers = new HashSet<UUID>();
+	private final Set<UUID> silentQuitPlayers = new HashSet<UUID>();
 	
 	public VanishManager(AmavyaAdmin plugin) {
 		super();
@@ -29,12 +32,8 @@ public class VanishManager extends SystemManager{
 	}
 	
 	private void registerCommands() {
-		commandExecutor = new VanishCommandExecutor(this);
-		plugin.getCommand("vanish").setExecutor(commandExecutor);
-		plugin.getCommand("silentjoin").setExecutor(commandExecutor);
-		plugin.getCommand("silentquit").setExecutor(commandExecutor);
-		plugin.getCommand("fakejoin").setExecutor(commandExecutor);
-		plugin.getCommand("fakequit").setExecutor(commandExecutor);
+		VanishCommandExecutor commandExecutor = new VanishCommandExecutor(this);
+		Utils.registerAndSetupCommands(plugin,commands, commandExecutor,plugin.permissionTabCompleter);
 	}
 	
 	public void toggleInvisibility(Player player) {

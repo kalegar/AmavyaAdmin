@@ -12,10 +12,15 @@ import me.sanjy33.amavyaadmin.inventory.InventoryManager;
 import me.sanjy33.amavyaadmin.motd.MessageOfTheDay;
 import me.sanjy33.amavyaadmin.sleep.SleepManager;
 import me.sanjy33.amavyaadmin.spy.SpyManager;
+import me.sanjy33.amavyaadmin.tabcompleter.OperatorTabCompleter;
+import me.sanjy33.amavyaadmin.tabcompleter.PermissionTabCompleter;
+import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -64,6 +69,8 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 	public AmavyaParticleLibHook particleLibHook;
 	public MessageOfTheDay messageOfTheDay;
 	private boolean debug = false;
+	public OperatorTabCompleter operatorTabCompleter;
+	public PermissionTabCompleter permissionTabCompleter;
 	
 	@Override
 	public void onDisable() {
@@ -77,6 +84,8 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 		if (!setupLuckPerms()) {
         	getLogger().info(ChatColor.RED + "[AmavyaAdmin] ERROR: Failed to load LuckPerms API!");
         }
+		operatorTabCompleter = new OperatorTabCompleter();
+		permissionTabCompleter = new PermissionTabCompleter();
 		periodicMessageManager = new PeriodicMessageManager(this);
 		messageManager = new MessageManager(this);
 		staffApplicationManager = new StaffApplicationManager(this);
@@ -116,18 +125,13 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 			getLogger().info("AmavyaParticleLib not found. Particle effects disabled!");
 		}
 	}
+
+	private static final String[] opCommands = {"lockdown","aareload"};
+	private static final String[] commands = {"fly","motd","ts","rules","setkit","tips","knownaliases"};
 	
 	private void registerCommands(){
-		getCommand("lockdown").setExecutor(commandExecutor);
-		getCommand("aareload").setExecutor(commandExecutor);
-		getCommand("fly").setExecutor(commandExecutor);
-		getCommand("motd").setExecutor(commandExecutor);
-		getCommand("ts").setExecutor(commandExecutor);
-		//Other Commands:
-		getCommand("rules").setExecutor(commandExecutor);
-		getCommand("setkit").setExecutor(commandExecutor);
-		getCommand("tips").setExecutor(commandExecutor);
-		getCommand("knownaliases").setExecutor(commandExecutor);
+		Utils.registerAndSetupCommands(this,opCommands,commandExecutor,operatorTabCompleter);
+		Utils.registerAndSetupCommands(this,commands,commandExecutor,permissionTabCompleter);
 	}
 	
 	public void reload() {

@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,8 +23,7 @@ public class MuteManager extends SystemManager {
 	
 	private final AmavyaAdmin plugin;
 	private final String fileName = "muted_players.yml";
-	private MuteCommandExecutor commandExecutor;
-	
+
 	private Set<MutedPlayer> mutedPlayers = ConcurrentHashMap.newKeySet();
 	private List<String> mutedCommands;
 	private BukkitTask unMuteTask = null;
@@ -35,11 +35,11 @@ public class MuteManager extends SystemManager {
 		load();
 		startUnMuteTask();
 	}
-	
+
+	private static final String[] commands = {"mute","unmute"};
 	private void registerCommands() {
-		commandExecutor = new MuteCommandExecutor(this,plugin.uuidManager);
-		plugin.getCommand("mute").setExecutor(commandExecutor);
-		plugin.getCommand("unmute").setExecutor(commandExecutor);
+		MuteCommandExecutor commandExecutor = new MuteCommandExecutor(this, plugin.uuidManager);
+		Utils.registerAndSetupCommands(plugin,commands, commandExecutor,plugin.permissionTabCompleter);
 	}
 
 	/**

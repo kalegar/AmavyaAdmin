@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,9 +21,8 @@ public class HomeManager extends SystemManager {
 	
 	private final AmavyaAdmin plugin;
 	private final String fileName = "homes.yml";
-	private HomeCommandExecutor commandExecutor;
-	
-	private Map<UUID, PlayerHome> playerHomes = new HashMap<UUID, PlayerHome>();
+
+	private final Map<UUID, PlayerHome> playerHomes = new HashMap<UUID, PlayerHome>();
 	private Long homeWarpWarmup = 60L;
 	private int maxPlayerHomes = 1;
 	
@@ -32,14 +32,17 @@ public class HomeManager extends SystemManager {
 		registerCommands();
 		load();
 	}
-	
+
+	private static final String[] commands = {
+			"home",
+			"sethome",
+			"deletehome",
+			"listhome"
+	};
 	private void registerCommands() {
 		//Home commands:
-		commandExecutor = new HomeCommandExecutor(plugin,this);
-		plugin.getCommand("home").setExecutor(commandExecutor);
-		plugin.getCommand("sethome").setExecutor(commandExecutor);
-		plugin.getCommand("deletehome").setExecutor(commandExecutor);
-		plugin.getCommand("listhome").setExecutor(commandExecutor);
+		HomeCommandExecutor commandExecutor = new HomeCommandExecutor(plugin, this);
+		Utils.registerAndSetupCommands(plugin,commands, commandExecutor,plugin.permissionTabCompleter);
 	}
 	
 	@Override
@@ -72,9 +75,7 @@ public class HomeManager extends SystemManager {
 	}
 	
 	public void clearHome(UUID uuid) {
-		if (playerHomes.containsKey(uuid)) {
-			playerHomes.remove(uuid);
-		}
+		playerHomes.remove(uuid);
 	}
 	
 	public void updateHomeName(UUID uuid, String name) {

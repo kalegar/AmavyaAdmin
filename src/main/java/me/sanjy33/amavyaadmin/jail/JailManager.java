@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,8 +24,7 @@ import me.sanjy33.amavyaadmin.SystemManager;
 public class JailManager extends SystemManager{
 	
 	private final AmavyaAdmin plugin;
-	private JailCommandExecutor commandExecutor;
-	
+
 	private List<String> blockedCommands = new ArrayList<String>();
 	private BukkitTask unJailTask = null;
 	private Map<Integer,JailCell> jailCells = new ConcurrentHashMap<>();
@@ -39,20 +39,23 @@ public class JailManager extends SystemManager{
 		load();
 		startUnJailCheckTask();
 	}
-	
+
+	private static final String[] commands = {
+			"jail",
+			"jailcreate",
+			"jaildelete",
+			"jaildeleteall",
+			"unjail",
+			"unjailall",
+			"jailstatus",
+			"jailaddtime",
+			"jailsubtracttime",
+			"jaillist"
+	};
 	private void registerCommands() {
 		//Jail commands:
-		commandExecutor = new JailCommandExecutor(plugin,this);
-		plugin.getCommand("jail").setExecutor(commandExecutor);
-		plugin.getCommand("jailcreate").setExecutor(commandExecutor);
-		plugin.getCommand("jaildelete").setExecutor(commandExecutor);
-		plugin.getCommand("jaildeleteall").setExecutor(commandExecutor);
-		plugin.getCommand("unjail").setExecutor(commandExecutor);
-		plugin.getCommand("unjailall").setExecutor(commandExecutor);
-		plugin.getCommand("jailstatus").setExecutor(commandExecutor);
-		plugin.getCommand("jailaddtime").setExecutor(commandExecutor);
-		plugin.getCommand("jailsubtracttime").setExecutor(commandExecutor);
-		plugin.getCommand("jaillist").setExecutor(commandExecutor);
+		JailCommandExecutor commandExecutor = new JailCommandExecutor(plugin, this);
+		Utils.registerAndSetupCommands(plugin,commands, commandExecutor,plugin.permissionTabCompleter);
 	}
 	
 	public void reload() {

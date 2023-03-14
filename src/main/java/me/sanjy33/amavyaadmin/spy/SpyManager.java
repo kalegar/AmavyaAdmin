@@ -2,6 +2,7 @@ package me.sanjy33.amavyaadmin.spy;
 
 import me.sanjy33.amavyaadmin.AmavyaAdmin;
 import me.sanjy33.amavyaadmin.SystemManager;
+import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
@@ -9,7 +10,6 @@ import java.util.*;
 public class SpyManager extends SystemManager {
 
     private final AmavyaAdmin plugin;
-    private SpyCommandExecutor commandExecutor;
 
     private Map<UUID, Set<CommandSender>> spyTargets = new HashMap<>();
 
@@ -19,9 +19,10 @@ public class SpyManager extends SystemManager {
         registerCommands();
     }
 
+    private static final String[] commands = {"spy"};
     private void registerCommands() {
-        commandExecutor = new SpyCommandExecutor(plugin, this);
-        plugin.getCommand("spy").setExecutor(commandExecutor);
+        SpyCommandExecutor commandExecutor = new SpyCommandExecutor(plugin, this);
+        Utils.registerAndSetupCommands(plugin,commands, commandExecutor,plugin.permissionTabCompleter);
     }
 
     public Set<CommandSender> getSpies(UUID target) {

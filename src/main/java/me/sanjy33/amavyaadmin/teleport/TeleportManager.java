@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -23,8 +25,7 @@ public class TeleportManager extends SystemManager {
 	
 	private final AmavyaAdmin plugin;
 	private final String fileName = "locations.yml";
-	private TeleportCommandExecutor commandExecutor;
-	
+
 	private final Map<Player, Player> teleportRequests = new HashMap<>();//Target - Sender
 	private final Map<Player, Location> deathLocations = new HashMap<>();
 	private final Map<Player, BukkitTask> teleportTasks = new HashMap<>();
@@ -202,24 +203,23 @@ public class TeleportManager extends SystemManager {
 			default: return null;
 		}
 	}
-	
+
+	private static final String[] commands = {"back","tp","tpa","tpaccept","tpdeny","spawn","setspawnwarp","warp","createwarp","deletewarp"};
 	private void registerCommands() {
-		commandExecutor = new TeleportCommandExecutor(this);
-		plugin.getCommand("back").setExecutor(commandExecutor);
-		plugin.getCommand("tp").setExecutor(commandExecutor);
-		plugin.getCommand("tpa").setExecutor(commandExecutor);
-		plugin.getCommand("tpaccept").setExecutor(commandExecutor);
-		plugin.getCommand("tpdeny").setExecutor(commandExecutor);
-		plugin.getCommand("spawn").setExecutor(commandExecutor);
-		plugin.getCommand("setspawnwarp").setExecutor(commandExecutor);
-		plugin.getCommand("setspawn").setExecutor(commandExecutor);
-		plugin.getCommand("warp").setExecutor(commandExecutor);
-		plugin.getCommand("createwarp").setExecutor(commandExecutor);
-		plugin.getCommand("deletewarp").setExecutor(commandExecutor);
+		TeleportCommandExecutor commandExecutor = new TeleportCommandExecutor(this);
+		Utils.registerAndSetupCommands(plugin,commands, commandExecutor,plugin.permissionTabCompleter);
 		//World TP Commands:
 		for (WorldWarp warp : WorldWarp.values()) {
-			plugin.getCommand(warp.getCommand()).setExecutor(commandExecutor);
-			plugin.getCommand(warp.getSetCommand()).setExecutor(commandExecutor);
+			PluginCommand command = plugin.getCommand(warp.getCommand());
+			if (command != null) {
+				command.setExecutor(commandExecutor);
+				command.setTabCompleter(plugin.permissionTabCompleter);
+			}
+			command = plugin.getCommand(warp.getSetCommand());
+			if (command != null) {
+				command.setExecutor(commandExecutor);
+				command.setTabCompleter(plugin.permissionTabCompleter);
+			}
 		}
 	}
 	

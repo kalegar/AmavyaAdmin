@@ -2,6 +2,7 @@ package me.sanjy33.amavyaadmin.inventory;
 
 import me.sanjy33.amavyaadmin.AmavyaAdmin;
 import me.sanjy33.amavyaadmin.SystemManager;
+import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,7 +23,6 @@ public class InventoryManager extends SystemManager {
     private final AmavyaAdmin plugin;
     private final String fileName = "inventories.yml";
     public static final int MAX_STORED_INVENTORIES = 10;
-    private InventoryCommandExecutor commandExecutor;
 
     private final Map<UUID, Map<String, Inventory>> inventories = new HashMap<>();
 
@@ -85,9 +85,12 @@ public class InventoryManager extends SystemManager {
         return 0;
     }
 
+    private static final String[] commands = {
+            "inventory"
+    };
     private void registerCommands() {
-        this.commandExecutor = new InventoryCommandExecutor(this);
-        plugin.getCommand("inventory").setExecutor(commandExecutor);
+        InventoryCommandExecutor commandExecutor = new InventoryCommandExecutor(this);
+        Utils.registerAndSetupCommands(plugin,commands, commandExecutor,plugin.permissionTabCompleter);
     }
 
     private void registerPermissions() {
