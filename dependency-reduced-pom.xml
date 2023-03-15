@@ -4,7 +4,7 @@
   <groupId>me.sanjy33</groupId>
   <artifactId>AmavyaAdmin</artifactId>
   <name>AmavyaAdmin</name>
-  <version>3.9.18</version>
+  <version>3.9.19</version>
   <description>A custom server administration plugin!</description>
   <build>
     <defaultGoal>clean package</defaultGoal>

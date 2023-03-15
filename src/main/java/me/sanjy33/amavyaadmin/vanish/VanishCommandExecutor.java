@@ -23,7 +23,7 @@ public class VanishCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("fakejoin")) {
 			if (player!=null){
-				if (!player.hasPermission("aadmin.vanish.fakejoin")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -40,7 +40,7 @@ public class VanishCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("fakequit")) {
 			if (player!=null){
-				if (!player.hasPermission("aadmin.vanish.fakequit")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -57,7 +57,7 @@ public class VanishCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("silentjoin")) {
 			if (player!=null){
-				if (!player.hasPermission("aadmin.vanish.silentjoin")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -76,7 +76,7 @@ public class VanishCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("silentquit")) {
 			if (player!=null){
-				if (!player.hasPermission("aadmin.vanish.silentquit")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -95,7 +95,7 @@ public class VanishCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("vanish")) {
 			if (player!=null){
-				if (!player.hasPermission("aadmin.vanish")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}

@@ -33,7 +33,7 @@ public class MuteCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("mute")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.mute")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -82,7 +82,7 @@ public class MuteCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("unmute")){
 			if (!(player==null)){
-				if (!player.hasPermission("aadmin.unmute")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}

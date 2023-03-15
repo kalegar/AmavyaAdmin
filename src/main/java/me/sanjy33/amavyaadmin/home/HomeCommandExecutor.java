@@ -35,7 +35,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 				sender.sendMessage("This command can't be used in the console.");
 				return true;
 			}else{
-				if (!player.hasPermission("aadmin.home.home")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -68,7 +68,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 				sender.sendMessage("This command can't be used in the console.");
 				return true;
 			}else{
-				if (!player.hasPermission("aadmin.home.set")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -88,7 +88,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 				sender.sendMessage("This command can't be used in the console.");
 				return true;
 			}else{
-				if (!player.hasPermission("aadmin.home.delete")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -124,7 +124,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("listhome")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.home.list")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}

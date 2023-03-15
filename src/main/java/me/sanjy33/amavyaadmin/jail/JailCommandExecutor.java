@@ -36,7 +36,7 @@ public class JailCommandExecutor implements CommandExecutor {
 			final String jailerName;
 			if (player!=null){
 				jailerName=player.getName();
-				if (!player.hasPermission("aadmin.jail.jail")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED + "You don't have permission!");
 					return true;
 				}
@@ -91,7 +91,7 @@ public class JailCommandExecutor implements CommandExecutor {
 				sender.sendMessage("You can't do this in the console.");
 				return true;
 			}else{
-				if (!player.hasPermission("aadmin.jail.create")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED+"You don't have permission!");
 					return true;
 				}
@@ -102,7 +102,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("jaildelete")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.jail.delete")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED+"You don't have permission!");
 					return true;
 				}
@@ -131,7 +131,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("unjail")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.jail.unjail")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED+"You don't have permission!");
 					return true;
 				}
@@ -162,7 +162,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("unjailall")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.jail.unjailall")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED+"You don't have permission!");
 					return true;
 				}
@@ -186,7 +186,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("jailstatus")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.jail.jailstatus")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED+"You don't have permission!");
 					return true;
 				}
@@ -202,7 +202,7 @@ public class JailCommandExecutor implements CommandExecutor {
 				messageName = "You";
 			}else{
 				if (player!=null){
-					if (!player.hasPermission("aadmin.jail.jailstatus.other")){
+					if (!player.hasPermission("aadmin.jail.status.other")){
 						player.sendMessage(ChatColor.RED+"Usage: /jailstatus");
 						return true;
 					}
@@ -221,7 +221,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("jailaddtime")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.jail.addtime")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED+"You don't have permission!");
 					return true;
 				}
@@ -249,7 +249,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("jailsubtracttime")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.jail.subtracttime")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED+"You don't have permission!");
 					return true;
 				}
@@ -277,7 +277,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		}
 		if (command.getName().equalsIgnoreCase("jaillist")){
 			if (player!=null){
-				if (!player.hasPermission("aadmin.jail.jaillist")){
+				if (!command.testPermission(player)){
 					player.sendMessage(ChatColor.RED+"You don't have permission!");
 					return true;
 				}

@@ -28,7 +28,7 @@ public class SpyCommandExecutor implements CommandExecutor {
             player = (Player) sender;
         }
         if (command.getName().equalsIgnoreCase("spy")) {
-            if (player != null && !player.hasPermission("aadmin.spy")) {
+            if (player != null && !command.testPermission(player)) {
                 player.sendMessage(ChatColor.RED + "You don't have permission!");
                 return true;
             }

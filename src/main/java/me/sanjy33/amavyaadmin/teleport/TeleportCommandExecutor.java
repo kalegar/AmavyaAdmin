@@ -46,7 +46,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("tpa")){
-			if (!player.hasPermission("aadmin.tpa")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -79,7 +79,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			
 		}
 		if (command.getName().equalsIgnoreCase("tpaccept")){
-			if (!player.hasPermission("aadmin.tpa")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -113,7 +113,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			}
 		}
 		if (command.getName().equalsIgnoreCase("tpdeny")){
-			if (!player.hasPermission("aadmin.tpa")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -129,7 +129,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			}
 		}
 		if (command.getName().equalsIgnoreCase("back")){
-			if (!player.hasPermission("aadmin.back")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -156,7 +156,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("setspawn")){
-			if (!player.hasPermission("aadmin.setspawn")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -166,7 +166,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("setspawnwarp")){
-			if (!player.hasPermission("aadmin.setspawn")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -183,7 +183,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("spawn")){
-			if (!player.hasPermission("aadmin.spawn")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -206,7 +206,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("createwarp")){
-			if (!player.hasPermission("aadmin.warp.create")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -225,7 +225,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("deletewarp")){
-			if (!player.hasPermission("aadmin.warp.delete")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
@@ -242,7 +242,7 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			}
 		}
 		if (command.getName().equalsIgnoreCase("warp")){
-			if (!player.hasPermission("aadmin.warp.warp")){
+			if (!command.testPermission(player)){
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}

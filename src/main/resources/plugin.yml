@@ -17,7 +17,7 @@ permissions:
       aadmin.mute: true
       aadmin.unmute: true
       aadmin.reload: true
-      aadmin.vanish: true
+      aadmin.vanish.*: true
   aadmin.moderator:
     description: Gives moderator access
     children:
@@ -103,15 +103,15 @@ permissions:
     default: op
   aadmin.jail.unjailall:
     default: op
-  aadmin.jail.jailstatus:
+  aadmin.jail.status:
     default: true
-  aadmin.jail.jailstatus.other:
+  aadmin.jail.status.other:
     default: op
   aadmin.jail.addtime:
     default: op
   aadmin.jail.subtracttime:
     default: op
-  aadmin.jail.jaillist:
+  aadmin.jail.list:
     default: op
   aadmin.home.home:
     default: true
@@ -137,7 +137,15 @@ permissions:
     default: op
   aadmin.tips:
     default: true
-  aadmin.vanish:
+  aadmin.vanish.*:
+    description: All vanish commands
+    children:
+      aadmin.vanish.vanish: true
+      aadmin.vanish.silentjoin: true
+      aadmin.vanish.silentquit: true
+      aadmin.vanish.fakejoin: true
+      aadmin.vanish.fakequit: true
+  aadmin.vanish.vanish:
     default: op
   aadmin.vanish.silentjoin:
     default: op
@@ -179,6 +187,9 @@ permissions:
     default: op
   aadmin.hub.set:
     default: op
+  aadmin.inventory:
+    description: Allows usage of /inventory command
+    default: op
   aadmin.inventory.store:
     default: op
   aadmin.inventory.restore:
@@ -189,174 +200,226 @@ commands:
   tp:
     description: Override for vanilla tp, defaults to tpa if not op
     usage: /tp
+    permission: aadmin.tpa
   fakejoin:
     description: Fake join
     usage: /fakejoin
+    permission: aadmin.vanish.fakejoin
   fakequit:
     description: Fake quit
     usage: /fakequit
+    permission: aadmin.vanish.fakequit
   silentjoin:
     description: Join silently
     usage: /silentjoin
+    permission: aadmin.vanish.silentjoin
   silentquit:
     description: Quit silently
     usage: /silentquit
+    permission: aadmin.vanish.silentquit
   vanish:
     description: Turn yourself invisible
     usage: /vanish
+    permission: aadmin.vanish.vanish
   tips:
     description: Toggles showing periodic tips.
     usage: /tips
+    permission: aadmin.tips
   setkit:
     description: Sets the starter kit players get when the join.
     usage: /setkit
+    permission: aadmin.setkit
   rules:
     description: Shows rules
     usage: /rules
+    permission: aadmin.rules
   home:
     description: Teleports player to their home.
     usage: /home
+    permission: aadmin.home.home
   sethome:
     aliases: [homeset]
     description: Sets a player's home.
     usage: /sethome
+    permission: aadmin.home.set
   deletehome:
-    aliases: [homedelete,resethome,homereset]
+    aliases: [delhome,homedelete,resethome,homereset]
     description: Deletes a player's home.
     usage: /deletehome
+    permission: aadmin.home.delete
   listhome:
     aliases: [homelist]
     description: Lists all player homes.
     usage: /listhome
+    permission: aadmin.home.list
   jail:
     description: Jails a player.
     usage: /jail <player> <time> <reason>
+    permission: aadmin.jail.jail
   jailcreate:
     description: Creates a prison cell.
     usage: /jailcreate
+    permission: aadmin.jail.create
   jaildelete:
     description: Deletes a particular jail cell.
     usage: /jaildelete <cellID>
+    permission: aadmin.jail.delete
   jaildeleteall:
     description: Deletes all jail cells.
     usage: /jaildeleteall
+    permission: aadmin.jail.deleteall
   unjail:
     description: Unjails a player.
     usage: /unjail <player>
+    permission: aadmin.jail.unjail
   unjailall:
     description: Unjails all players.
     usage: /unjailall
+    permission: aadmin.jail.unjailall
   jailstatus:
     description: Checks the jail status of a player.
     usage: /jailstatus [player]
+    permission: aadmin.jail.status
   jailaddtime:
     description: Adds time to a player's jail sentence.
     usage: /jailaddtime <player> <time>
+    permission: aadmin.jail.addtime
   jailsubtracttime:
     description: Subtracts time from a player's jail sentence.
     usage: /jailsubtracttime <player> <time>
+    permission: aadmin.jail.subtracttime
   jaillist:
     description: Gets a list of all jail cells.
     usage: /jaillist
+    permission: aadmin.jail.list
   lockdown:
     description: Toggles lockdown status of the server
     usage: /lockdown
+    permission: aadmin.lockdown
   apply:
     aliases: [staffapply, staffapp, application, getstaff, getmod, modapplication]
     description: Apply for staff
     usage: /apply
+    permission: aadmin.staffapps.apply
   aareload:
     aliases: [amavyaadminreload, reloadaa]
     description: Reloads AmavyaAdmin config
     usage: /aareload
+    permission: aadmin.reload
   mute:
     aliases: [muteplayer]
     description: Mutes a player
     usage: /mute <player> <time> <reason>
+    permission: aadmin.mute
   unmute:
     aliases: [unmuteplayer]
     description: Unmutes a player
     usage: /unmute <player>
+    permission: aadmin.unmute
   warp:
     aliases: []
     description: Teleports you to a warp point
     usage: /warp <warpname>
+    permission: aadmin.warp.warp
   createwarp:
     aliases: [cwarp]
     description: Creates a warp point
     usage: /createwarp <warpname>
+    permission: aadmin.warp.create
   deletewarp:
     aliases: [dwarp, removewarp, rwarp]
     description: Deletes a warp point
     usage: /deletewarp <warpname>
+    permission: aadmin.warp.delete
   fly:
     aliases: [togglefly]
     description: Allows you to fly
     usage: /fly [player]
+    permission: aadmin.fly
   setspawnwarp:
     aliases: [spawnsetwarp]
     description: Sets the warp point for spawn for the current world.
     usage: /setspawnwarp
+    permission: aadmin.setspawn
   setspawn:
     aliases: [spawnset]
     description: Sets the spawn for the current world.
     usage: /setspawn
+    permission: aadmin.setspawn
   spawn:
     aliases: [warpspawn]
     description: Warps the player to the world's spawnpoint
     usage: /spawn
+    permission: aadmin.spawn
   motd:
     aliases: [messageoftheday]
     description: Sets the message of the day
     usage: /motd <motd>
+    permission: aadmin.motd
   ts:
     aliases: [timeset]
     description: Sets the time in the current or a specified world.
     usage: /ts <time> [world]
+    permission: aadmin.timeset
   back:
     aliases: [goback]
     description: Teleports you back to your last death point
     usage: /back
+    permission: aadmin.back
   tpa:
     aliases: [tpask]
     description: Asks to teleport to a player
     usage: /tpa <player>
+    permission: aadmin.tpa
   tpaccept:
     description: Accepts a request for a player to teleport to you
     usage: /tpaccept
+    permission: aadmin.tpa
   tpdeny:
     description: Denies a request for a player to teleport to you
     usage: /tpdeny
+    permission: aadmin.tpa
   knownaliases:
     description: Lists known aliases for a given username
     usage: /knownaliases <name>
+    permission: aadmin.aliases
   spy:
     description: Spy
     usage: /spy
+    permission: aadmin.spy
   survival:
     description: Teleports you to the survival world.
     usage: /survival
+    permission: aadmin.survival
   creative:
     description: Teleports you to the creative world.
     usage: /creative
+    permission: aadmin.creative
   pvp:
     description: Teleports you to the PvP world.
     usage: /pvp
+    permission: aadmin.pvp
   hub:
     description: Teleports you to the Hub world.
     usage: /hub
+    permission: aadmin.hub
   setsurvivalwarp:
     description: Sets the location of the /survival command.
     usage: /setsurvivalwarp
+    permission: aadmin.survival.set
   setcreativewarp:
     description: Sets the location of the /creative command.
     usage: /setcreativewarp
+    permission: aadmin.creative.set
   setpvpwarp:
     description: Sets the location of the /pvp command.
     usage: /setpvpwarp
+    permission: aadmin.pvp.set
   sethubwarp:
     description: Sets the location of the /hub command.
     usage: /sethubwarp
+    permission: aadmin.hub.set
   inventory:
     description: Inventory storage command.
     usage: /inventory <save|load|delete>
+    permission: aadmin.inventory
