@@ -43,18 +43,22 @@ public class StaffApplicationCommandExecutor implements CommandExecutor {
 				sender.sendMessage("This command can't be used in the console!");
 				return true;
 			}
-			if (args.length>=1){
-				if (args[0].equalsIgnoreCase("submit")){
-					if (!player.hasPermission("aadmin.staffapps.apply")){
+			if (StaffApplicationManager.simpleApplications) {
+				sender.sendMessage(StaffApplicationManager.applicationSimpleMessage);
+				return true;
+			}
+			if (args.length>=1) {
+				if (args[0].equalsIgnoreCase("submit")) {
+					if (!player.hasPermission("aadmin.staffapps.apply")) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
-					if (!manager.isApplyingForStaff(player)){
+					if (!manager.isApplyingForStaff(player)) {
 						player.sendMessage(ChatColor.RED + "Please use " + ChatColor.AQUA + "/apply" + ChatColor.RED + " first!");
 						return true;
 					}
 					ItemStack i = player.getInventory().getItemInMainHand();
-					if (i==null || ((!i.getType().equals(Material.WRITABLE_BOOK)) && (!i.getType().equals(Material.WRITTEN_BOOK)))){
+					if (i == null || ((!i.getType().equals(Material.WRITABLE_BOOK)) && (!i.getType().equals(Material.WRITTEN_BOOK)))) {
 						player.sendMessage(ChatColor.RED + "Hold the application book in your hand and use /apply submit");
 						return true;
 					}
@@ -74,60 +78,60 @@ public class StaffApplicationCommandExecutor implements CommandExecutor {
 					manager.setApplyingForStaff(uuid, false);
 					player.sendMessage(ChatColor.GREEN + "Application submitted successfully!");
 					player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-					for (OfflinePlayer p : Bukkit.getOperators()){
-						if (p.isOnline()){
+					for (OfflinePlayer p : Bukkit.getOperators()) {
+						if (p.isOnline()) {
 							p.getPlayer().sendMessage(ChatColor.AQUA + "[App] " + player.getName() + " just submitted a staff application!");
 						}
 					}
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("cancel")){
-					if (!player.hasPermission("aadmin.staffapps.apply")){
+				if (args[0].equalsIgnoreCase("cancel")) {
+					if (!player.hasPermission("aadmin.staffapps.apply")) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
-					if (manager.isApplyingForStaff(player)){
+					if (manager.isApplyingForStaff(player)) {
 						player.sendMessage(ChatColor.GREEN + "You have cancelled your application.");
 						manager.setApplyingForStaff(player.getUniqueId(), false);
-						if (player.getInventory().contains(Material.WRITABLE_BOOK)){
-							player.getInventory().remove(new ItemStack(Material.WRITABLE_BOOK,1));
+						if (player.getInventory().contains(Material.WRITABLE_BOOK)) {
+							player.getInventory().remove(new ItemStack(Material.WRITABLE_BOOK, 1));
 						}
 						return true;
 					}
 					player.sendMessage(ChatColor.RED + "You aren't currently applying for staff! To apply, use /apply");
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("accept")){
-					if (!player.hasPermission("aadmin.staffapps.accept")){
+				if (args[0].equalsIgnoreCase("accept")) {
+					if (!player.hasPermission("aadmin.staffapps.accept")) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
-					if (args.length < 2){
+					if (args.length < 2) {
 						player.sendMessage(ChatColor.RED + "Usage: /apply accept <player>");
 						return true;
 					}
 					StaffApplication app = manager.getApplication(args[1]);
-					if (app == null){
+					if (app == null) {
 						player.sendMessage(ChatColor.RED + args[1] + " has not submitted an application!");
 						return true;
 					}
-					setPermsGroup(app.getUUID(),plugin.staffPermissionGroup);
+					setPermsGroup(app.getUUID(), plugin.staffPermissionGroup);
 					player.sendMessage(ChatColor.GREEN + args[1] + "'s application was accepted!");
 					plugin.messageManager.sendMessage(app.getUUID(), StaffApplicationManager.applicationAcceptedMessage);
 					manager.deleteApplication(app.getUUID());
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("reject") || args[0].equalsIgnoreCase("deny")){
-					if (!player.hasPermission("aadmin.staffapps.deny")){
+				if (args[0].equalsIgnoreCase("reject") || args[0].equalsIgnoreCase("deny")) {
+					if (!player.hasPermission("aadmin.staffapps.deny")) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
-					if (args.length < 2){
+					if (args.length < 2) {
 						player.sendMessage(ChatColor.RED + "Usage: /apply deny <player>");
 						return true;
 					}
 					StaffApplication app = manager.getApplication(args[1]);
-					if (app == null){
+					if (app == null) {
 						player.sendMessage(ChatColor.RED + args[1] + " has not submitted an application!");
 						return true;
 					}
@@ -136,28 +140,28 @@ public class StaffApplicationCommandExecutor implements CommandExecutor {
 					manager.deleteApplication(app.getUUID());
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("check") || args[0].equalsIgnoreCase("read")){
-					if (!player.hasPermission("aadmin.staffapps.check")){
+				if (args[0].equalsIgnoreCase("check") || args[0].equalsIgnoreCase("read")) {
+					if (!player.hasPermission("aadmin.staffapps.check")) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
-					if (args.length < 2){
+					if (args.length < 2) {
 						player.sendMessage(ChatColor.DARK_GREEN + "Staff Applications: (Use /apply check <name>)");
-						if (player.hasPermission("aadmin.staffapps.accept")){
+						if (player.hasPermission("aadmin.staffapps.accept")) {
 							player.sendMessage(ChatColor.DARK_GREEN + "To accept/deny, use /apply <accept/deny> <name>");
 						}
 						player.sendMessage(ChatColor.AQUA + "Unread" + ChatColor.WHITE + " - " + ChatColor.DARK_GRAY + "Read");
-						for (StaffApplication app : manager.getApplications()){
-							if (app.isRead()){
+						for (StaffApplication app : manager.getApplications()) {
+							if (app.isRead()) {
 								player.sendMessage(ChatColor.DARK_GRAY + " - " + app.getLastKnownName());
-							}else{
+							} else {
 								player.sendMessage(ChatColor.AQUA + " - " + app.getLastKnownName());
 							}
 						}
 						return true;
 					}
 					StaffApplication app = manager.getApplication(args[1]);
-					if (app == null){
+					if (app == null) {
 						player.sendMessage(ChatColor.RED + "There is no application from player " + args[1]);
 						return true;
 					}
@@ -173,25 +177,25 @@ public class StaffApplicationCommandExecutor implements CommandExecutor {
 					player.sendMessage(ChatColor.GREEN + "You have been given a book with the application!");
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("delete")){
-					if (!player.hasPermission("aadmin.staffapps.delete")){
+				if (args[0].equalsIgnoreCase("delete")) {
+					if (!player.hasPermission("aadmin.staffapps.delete")) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
-					if (args.length < 2){
+					if (args.length < 2) {
 						player.sendMessage(ChatColor.RED + "Usage: /apply delete <name>");
 						return true;
 					}
 					if (manager.deleteApplication(args[1])) {
 						player.sendMessage(ChatColor.GREEN + "Application '" + args[1] + "' deleted!");
 						return true;
-					}else {
+					} else {
 						player.sendMessage(ChatColor.RED + "There is no application from player " + args[1]);
 						return true;
 					}
 				}
-				if (args[0].equalsIgnoreCase("deleteall")){
-					if (!player.hasPermission("aadmin.staffapps.delete")){
+				if (args[0].equalsIgnoreCase("deleteall")) {
+					if (!player.hasPermission("aadmin.staffapps.delete")) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
@@ -199,8 +203,8 @@ public class StaffApplicationCommandExecutor implements CommandExecutor {
 					player.sendMessage(ChatColor.GREEN + "All applications deleted!");
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("deleteread")){
-					if (!player.hasPermission("aadmin.staffapps.delete")){
+				if (args[0].equalsIgnoreCase("deleteread")) {
+					if (!player.hasPermission("aadmin.staffapps.delete")) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}

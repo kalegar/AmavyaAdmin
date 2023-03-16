@@ -32,12 +32,20 @@ rules:
   - ' 2. No Chat Spam'
   - ' 3. Dont ask for staff, use /apply'
   - ' 4. Have Fun!'
-  
+
+tpa:
+  messages:
+    buttons:
+      accept: '[Accept]'
+      deny: '[Cancel]'
+
 staffapplications:
+  simpleapplications: false
   permissiongroups:
     staff: mod
     default: default
   messages:
+    simple: '&b[Staff Applications] $fYou can apply for staff on our website: &bhttp://timelesscraft.ca/#/staffapplication&f!'
     accepted: "&b[Staff Applications] &fCongrats! Your staff application was &aaccepted&f! You are now a &bmoderator&f!"
     inprogress: "&b[Staff Applications] &fYour staff application is under review."
     denied: "&b[Staff Applications] &fUnfortunately your staff application was &cdenied&f."

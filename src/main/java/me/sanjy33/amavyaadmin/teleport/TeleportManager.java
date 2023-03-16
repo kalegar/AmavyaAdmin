@@ -14,6 +14,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -38,6 +39,9 @@ public class TeleportManager extends SystemManager {
 	private Location creativeLocation = null;
 	private Location pvpLocation = null;
 	private Location hubLocation = null;
+
+	public String messageButtonAccept = "";
+	public String messageButtonDeny = "";
 	
 	public TeleportManager(AmavyaAdmin plugin) {
 		this.plugin = plugin;
@@ -225,7 +229,14 @@ public class TeleportManager extends SystemManager {
 	
 	@Override
 	public void reload() {
-		teleportWarmup = (plugin.getConfig().getInt("warpwarmup")* 20L);
+		FileConfiguration config = plugin.getConfig();
+		teleportWarmup = (config.getInt("warpwarmup")* 20L);
+		if (config.contains("tpa.messages.buttons.accept")) {
+			messageButtonAccept = config.getString("tpa.messages.buttons.accept","[Accept]");
+		}
+		if (config.contains("tpa.messages.buttons.deny")) {
+			messageButtonDeny = config.getString("tpa.messages.buttons.deny","[Deny]");
+		}
 	}
 	
 	@Override

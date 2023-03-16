@@ -50,8 +50,8 @@ public class TeleportCommandExecutor implements CommandExecutor {
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
-			if (args.length < 1){
-				return false;
+			if (args.length < 1) {
+				return acceptTeleport(player);
 			}
 			Player target = Bukkit.getPlayer(args[0]);
 			if (target != null) {
@@ -63,10 +63,10 @@ public class TeleportCommandExecutor implements CommandExecutor {
 				}
 				manager.createTeleportRequest(target, player);
 				target.sendMessage(ChatColor.AQUA + player.getName() + ChatColor.GREEN + " wants to teleport to you!");
-				TextComponent accept = new TextComponent(ChatColor.AQUA + "[Accept]");
+				TextComponent accept = new TextComponent(ChatColor.AQUA + manager.messageButtonAccept);
 				accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/tpaccept"));
 				accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text("Accepts the teleport request!")));
-				TextComponent deny = new TextComponent(ChatColor.AQUA + "[Deny]");
+				TextComponent deny = new TextComponent(ChatColor.AQUA + manager.messageButtonDeny);
 				deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/tpdeny"));
 				deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text("Denies the teleport request!")));
 				target.spigot().sendMessage(accept,new TextComponent(ChatColor.GREEN + " or "),deny);
@@ -83,34 +83,10 @@ public class TeleportCommandExecutor implements CommandExecutor {
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
-			if (manager.isTeleportRequestTarget(player)){
-				Player requester = manager.getTeleportRequestSender(player);
-				player.sendMessage(ChatColor.GREEN + "You accepted "+requester.getName()+"'s teleport request!");
-				//player.sendMessage(ChatColor.GREEN + target.getName() + " teleported to you!");
-				requester.sendMessage(ChatColor.GREEN + player.getName() + " accepted your teleport request!");
-				requester.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent(ChatColor.GREEN + "You will teleport in " + (manager.getTeleportWarmup()/20) + " seconds. Don't move!"));
-				manager.deleteTeleportRequest(player);
-				manager.teleport(requester, player.getLocation(), new TeleportCallback() {
-
-					@Override
-					public void onTeleport(boolean success, Player player, Location previousLocation,
-							Location newLocation, String message) {
-						if (success) {
-							requester.sendMessage(ChatColor.GREEN + " You teleported to " + player.getName() + "!");
-							player.sendMessage(ChatColor.GREEN + requester.getName() + " teleported to you!");
-						}else {
-							requester.sendMessage(ChatColor.RED + message);
-							player.sendMessage(ChatColor.RED + message);
-						}
-					}
-					
-				});
-
-				return true;
-			}else{
+			if (!acceptTeleport(player)) {
 				player.sendMessage(ChatColor.RED + "No one has requested to teleport to you!");
-				return true;
 			}
+			return true;
 		}
 		if (command.getName().equalsIgnoreCase("tpdeny")){
 			if (!command.testPermission(player)){
@@ -294,6 +270,36 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			}
 		}
 		return false;
+	}
+
+	private boolean acceptTeleport(Player player) {
+		if (manager.isTeleportRequestTarget(player)){
+			Player requester = manager.getTeleportRequestSender(player);
+			player.sendMessage(ChatColor.GREEN + "You accepted "+requester.getName()+"'s teleport request!");
+			//player.sendMessage(ChatColor.GREEN + target.getName() + " teleported to you!");
+			requester.sendMessage(ChatColor.GREEN + player.getName() + " accepted your teleport request!");
+			requester.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent(ChatColor.GREEN + "You will teleport in " + (manager.getTeleportWarmup()/20) + " seconds. Don't move!"));
+			manager.deleteTeleportRequest(player);
+			manager.teleport(requester, player.getLocation(), new TeleportCallback() {
+
+				@Override
+				public void onTeleport(boolean success, Player player, Location previousLocation,
+									   Location newLocation, String message) {
+					if (success) {
+						requester.sendMessage(ChatColor.GREEN + " You teleported to " + player.getName() + "!");
+						player.sendMessage(ChatColor.GREEN + requester.getName() + " teleported to you!");
+					}else {
+						requester.sendMessage(ChatColor.RED + message);
+						player.sendMessage(ChatColor.RED + message);
+					}
+				}
+
+			});
+
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 }

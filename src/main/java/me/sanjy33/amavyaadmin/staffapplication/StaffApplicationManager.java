@@ -37,6 +37,8 @@ public class StaffApplicationManager extends SystemManager{
 	public static String applicationAcceptedMessage = "";
 	public static String applicationDeniedMessage = "";
 	public static String applicationInProgressMessage = "";
+	public static String applicationSimpleMessage = "";
+	public static Boolean simpleApplications = false;
 	
 	public StaffApplicationManager(AmavyaAdmin plugin) {
 		super();
@@ -153,14 +155,20 @@ public class StaffApplicationManager extends SystemManager{
 	public void reload() {
 		//Load from main config:
 		FileConfiguration config = plugin.getConfig();
+		if (config.contains("staffapplications.simpleapplications")) {
+			simpleApplications = config.getBoolean("staffapplications.simpleapplications");
+		}
 		if (config.contains("staffapplications.messages.accepted")) {
-			   applicationAcceptedMessage = ChatColor.translateAlternateColorCodes('&',config.getString("staffapplications.messages.accepted"));
+			applicationAcceptedMessage = ChatColor.translateAlternateColorCodes('&',config.getString("staffapplications.messages.accepted"));
 		}
 		if (config.contains("staffapplications.messages.denied")) {
 			applicationDeniedMessage = ChatColor.translateAlternateColorCodes('&',config.getString("staffapplications.messages.denied"));
 		}
 		if (config.contains("staffapplications.messages.inprogress")) {
 			applicationInProgressMessage = ChatColor.translateAlternateColorCodes('&',config.getString("staffapplications.messages.inprogress"));
+		}
+		if (config.contains("staffapplications.messages.simple")) {
+			applicationSimpleMessage = ChatColor.translateAlternateColorCodes('&',config.getString("staffapplications.messages.simple"));
 		}
 		if (config.contains("staffapplications.pages")) {
 			List<String> temp = config.getStringList("staffapplications.pages");
