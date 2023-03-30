@@ -34,6 +34,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.33" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.luckperms:api:5.4" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:24.0.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: me.sanjy33:AmavyaParticleLib:1.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: me.sanjy33:AmavyaParticleLib:1.4-SNAPSHOT" level="project" />
   </component>
 </module>

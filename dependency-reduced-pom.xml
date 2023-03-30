@@ -84,7 +84,7 @@
     <dependency>
       <groupId>me.sanjy33</groupId>
       <artifactId>AmavyaParticleLib</artifactId>
-      <version>1.2-SNAPSHOT</version>
+      <version>1.4-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

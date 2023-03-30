@@ -2,16 +2,11 @@ package me.sanjy33.amavyaadmin.teleport;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 import me.sanjy33.amavyaadmin.util.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,12 +22,13 @@ public class TeleportManager extends SystemManager {
 	private final AmavyaAdmin plugin;
 	private final String fileName = "locations.yml";
 
-	private final Map<Player, Player> teleportRequests = new HashMap<>();//Target - Sender
+	private final List<TeleportRequest> teleportRequests = new ArrayList<>();
 	private final Map<Player, Location> deathLocations = new HashMap<>();
 	private final Map<Player, BukkitTask> teleportTasks = new HashMap<>();
 	private final Map<Player, Location> lastLocations = new HashMap<>();
 	private final Map<String, Location> warps = new HashMap<>();
 	private Long teleportWarmup = 60L;
+	private int teleportRequestTimeoutTicks = 1200; //60 seconds
 	private final Map<UUID, Location> worldSpawnLocations = new HashMap<>();
 
 	private Location survivalLocation = null;
@@ -106,22 +102,51 @@ public class TeleportManager extends SystemManager {
 			deathLocations.remove(player);
 		}
 	}
+
+	public TeleportRequest findTeleportRequest(Player player) {
+		for (TeleportRequest request : teleportRequests) {
+			if (request.involves(player)) {
+				return request;
+			}
+		}
+		return null;
+	}
 	
 	public void deleteTeleportRequest(Player target) {
-		teleportRequests.remove(target);
+		for (int i = 0; i < teleportRequests.size(); i++) {
+			if (teleportRequests.get(i).getTo().equals(target)) {
+				teleportRequests.remove(i);
+				return;
+			}
+		}
 	}
 	
 	public void createTeleportRequest(Player target, Player sender) {
-		teleportRequests.put(target, sender);
+		teleportRequests.add(new TeleportRequest(plugin,target,sender,teleportRequestTimeoutTicks,(req) -> {
+			for (int i = 0; i < teleportRequests.size(); i++) {
+				if (teleportRequests.get(i).getId().equals(req.getId())) {
+					req.getFrom().sendMessage(ChatColor.RED + "Your teleport request to " + req.getTo().getName() + " expired.");
+					teleportRequests.remove(i);
+					return;
+				}
+			}
+		}));
 	}
 	
 	public boolean isTeleportRequestTarget(Player player) {
-		return teleportRequests.containsKey(player);
+		for (TeleportRequest request : teleportRequests) {
+			if (request.getTo().equals(player)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public Player getTeleportRequestSender(Player target) {
-		if (teleportRequests.containsKey(target)) {
-			return teleportRequests.get(target);
+		for (TeleportRequest request : teleportRequests) {
+			if (request.getFrom().equals(target)) {
+				return request.getTo();
+			}
 		}
 		return null;
 	}

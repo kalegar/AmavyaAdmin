@@ -18,6 +18,6 @@ public class AmavyaParticleLibWrapper implements AmavyaParticleLibHook{
     }
 
     public void addBurstEffect(Player player, Particle particle, long duration, float period, double radius, int steps) {
-        AmavyaParticleLib.addParticleEvent(new BurstParticleEvent(player, particle, duration, period, radius, steps));
+        AmavyaParticleLib.addParticleEvent(new BurstParticleEvent(player, particle, duration, period, 0.25, radius, steps));
     }
 }
