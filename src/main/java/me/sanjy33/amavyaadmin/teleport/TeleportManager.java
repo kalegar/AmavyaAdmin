@@ -29,6 +29,7 @@ public class TeleportManager extends SystemManager {
 	private final Map<String, Location> warps = new HashMap<>();
 	private Long teleportWarmup = 60L;
 	private int teleportRequestTimeoutTicks = 1200; //60 seconds
+	private Long teleportRequestWarmupTicks = 60L;
 	private final Map<UUID, Location> worldSpawnLocations = new HashMap<>();
 
 	private Location survivalLocation = null;
@@ -98,57 +99,53 @@ public class TeleportManager extends SystemManager {
 	}
 	
 	public void removeDeathLocation(Player player) {
-		if (deathLocations.containsKey(player)) {
-			deathLocations.remove(player);
-		}
+		deathLocations.remove(player);
 	}
 
-	public TeleportRequest findTeleportRequest(Player player) {
-		for (TeleportRequest request : teleportRequests) {
-			if (request.involves(player)) {
-				return request;
-			}
-		}
-		return null;
-	}
-	
-	public void deleteTeleportRequest(Player target) {
+	public boolean deleteTeleportRequest(String requestId) {
 		for (int i = 0; i < teleportRequests.size(); i++) {
-			if (teleportRequests.get(i).getTo().equals(target)) {
+			if (teleportRequests.get(i).getId().equals(requestId)) {
 				teleportRequests.remove(i);
-				return;
-			}
-		}
-	}
-	
-	public void createTeleportRequest(Player target, Player sender) {
-		teleportRequests.add(new TeleportRequest(plugin,target,sender,teleportRequestTimeoutTicks,(req) -> {
-			for (int i = 0; i < teleportRequests.size(); i++) {
-				if (teleportRequests.get(i).getId().equals(req.getId())) {
-					req.getFrom().sendMessage(ChatColor.RED + "Your teleport request to " + req.getTo().getName() + " expired.");
-					teleportRequests.remove(i);
-					return;
-				}
-			}
-		}));
-	}
-	
-	public boolean isTeleportRequestTarget(Player player) {
-		for (TeleportRequest request : teleportRequests) {
-			if (request.getTo().equals(player)) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public Player getTeleportRequestSender(Player target) {
+	public TeleportRequest createTeleportRequest(Player target, Player sender) {
+		TeleportRequest request = new TeleportRequest(plugin,target,sender,teleportRequestTimeoutTicks,(req) -> {
+			for (int i = 0; i < teleportRequests.size(); i++) {
+				if (teleportRequests.get(i).getId().equals(req.getId())) {
+					if (req.getFrom() != null && req.getFrom().isOnline()) {
+						req.getFrom().sendMessage(ChatColor.RED + "Your teleport request to " + req.getTo().getName() + " expired.");
+					}
+					teleportRequests.remove(i);
+					return;
+				}
+			}
+		});
+		teleportRequests.add(request);
+		return request;
+	}
+
+	public List<TeleportRequest> getTeleportRequestsTargetingPlayer(Player target) {
+		List<TeleportRequest> result = new ArrayList<>();
 		for (TeleportRequest request : teleportRequests) {
-			if (request.getFrom().equals(target)) {
-				return request.getTo();
+			if (request.getTo().equals(target)) {
+				result.add(request);
 			}
 		}
-		return null;
+		return result;
+	}
+
+	public List<TeleportRequest> getSentTeleportRequests(Player sender) {
+		List<TeleportRequest> result = new ArrayList<>();
+		for (TeleportRequest request : teleportRequests) {
+			if (request.getFrom().equals(sender)) {
+				result.add(request);
+			}
+		}
+		return result;
 	}
 
 	public Location getWorldSpawnLocation(UUID worldUUID) {
@@ -256,6 +253,8 @@ public class TeleportManager extends SystemManager {
 	public void reload() {
 		FileConfiguration config = plugin.getConfig();
 		teleportWarmup = (config.getInt("warpwarmup")* 20L);
+		teleportRequestWarmupTicks = (config.getInt("tpa.warmupSeconds",3) * 20L);
+		teleportRequestTimeoutTicks = (config.getInt("tpa.timeoutSeconds",60) * 20);
 		if (config.contains("tpa.messages.buttons.accept")) {
 			messageButtonAccept = config.getString("tpa.messages.buttons.accept","[Accept]");
 		}
@@ -351,4 +350,7 @@ public class TeleportManager extends SystemManager {
 
 	}
 
+	public Long getTeleportRequestWarmupTicks() {
+		return teleportRequestWarmupTicks;
+	}
 }

@@ -34,6 +34,8 @@ rules:
   - ' 4. Have Fun!'
 
 tpa:
+  timeoutSeconds: 60
+  warmupSeconds: 3
   messages:
     buttons:
       accept: '[Accept]'

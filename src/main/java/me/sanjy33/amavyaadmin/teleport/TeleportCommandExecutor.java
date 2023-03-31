@@ -16,6 +16,8 @@ import org.bukkit.entity.Player;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.List;
+
 public class TeleportCommandExecutor implements CommandExecutor {
 	
 	private final TeleportManager manager;
@@ -46,8 +48,11 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("tpa")){
-			if (!command.testPermission(player)){
-				player.sendMessage(ChatColor.RED + "You don't have permission!");
+			if (player == null) {
+				return true;
+			}
+			if (!command.testPermission(sender)){
+				sender.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
 			if (args.length < 1) {
@@ -55,9 +60,10 @@ public class TeleportCommandExecutor implements CommandExecutor {
 			}
 			Player target = Bukkit.getPlayer(args[0]);
 			if (target != null) {
-				if (manager.isTeleportRequestTarget(target)){
-					if (manager.getTeleportRequestSender(target).equals(player)){
-						player.sendMessage(ChatColor.RED + "You have already sent a teleport request to that player!");
+				List<TeleportRequest> sentRequests = manager.getSentTeleportRequests(player);
+				for (TeleportRequest request : sentRequests) {
+					if (request.getTo() != null && request.getTo().equals(target)) {
+						player.sendMessage(ChatColor.RED + "You have already sent a teleport request to "+target.getName()+"!");
 						return true;
 					}
 				}
@@ -93,11 +99,29 @@ public class TeleportCommandExecutor implements CommandExecutor {
 				player.sendMessage(ChatColor.RED + "You don't have permission!");
 				return true;
 			}
-			if (manager.isTeleportRequestTarget(player)){
-				Player tpsender = manager.getTeleportRequestSender(player);
+			List<TeleportRequest> requests = manager.getTeleportRequestsTargetingPlayer(player);
+			int requestsRemaining = requests.size();
+			if (requestsRemaining > 0) {
+				if (args.length >= 1) {
+					for (TeleportRequest request : requests) {
+						for (String name : args) {
+							if (request.getFrom().getName().equalsIgnoreCase(name)) {
+								request.getFrom().sendMessage(ChatColor.RED + player.getName() + " denied your teleport request!");
+								manager.deleteTeleportRequest(request.getId());
+								requestsRemaining--;
+							}
+						}
+					}
+				}else{
+					TeleportRequest request = requests.get(0);
+					request.getFrom().sendMessage(ChatColor.RED + player.getName() + " denied your teleport request!");
+					manager.deleteTeleportRequest(request.getId());
+					requestsRemaining--;
+				}
 				player.sendMessage(ChatColor.RED + "Teleport request denied.");
-				tpsender.sendMessage(ChatColor.RED + player.getName() + " denied your teleport request!");
-				manager.deleteTeleportRequest(player);
+				if (requestsRemaining > 0) {
+					player.sendMessage(ChatColor.RED + "You still have " + requestsRemaining + " pending teleport requests.");
+				}
 				return true;
 			}else{
 				player.sendMessage(ChatColor.RED + "No one has requested to teleport to you!");
@@ -273,28 +297,33 @@ public class TeleportCommandExecutor implements CommandExecutor {
 	}
 
 	private boolean acceptTeleport(Player player) {
-		if (manager.isTeleportRequestTarget(player)){
-			Player requester = manager.getTeleportRequestSender(player);
-			player.sendMessage(ChatColor.GREEN + "You accepted "+requester.getName()+"'s teleport request!");
-			//player.sendMessage(ChatColor.GREEN + target.getName() + " teleported to you!");
-			requester.sendMessage(ChatColor.GREEN + player.getName() + " accepted your teleport request!");
-			requester.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent(ChatColor.GREEN + "You will teleport in " + (manager.getTeleportWarmup()/20) + " seconds. Don't move!"));
-			manager.deleteTeleportRequest(player);
-			manager.teleport(requester, player.getLocation(), new TeleportCallback() {
-
-				@Override
-				public void onTeleport(boolean success, Player player, Location previousLocation,
-									   Location newLocation, String message) {
-					if (success) {
-						requester.sendMessage(ChatColor.GREEN + " You teleported to " + player.getName() + "!");
-						player.sendMessage(ChatColor.GREEN + requester.getName() + " teleported to you!");
-					}else {
-						requester.sendMessage(ChatColor.RED + message);
-						player.sendMessage(ChatColor.RED + message);
-					}
+		List<TeleportRequest> requests = manager.getTeleportRequestsTargetingPlayer(player);
+		if (requests.size() > 0) {
+			for (TeleportRequest request : requests) {
+				Player requester = request.getFrom();
+				if (requester == null || !requester.isOnline()) {
+					continue;
 				}
+				player.sendMessage(ChatColor.GREEN + "You accepted " + requester.getName() + "'s teleport request!");
+				requester.sendMessage(ChatColor.GREEN + player.getName() + " accepted your teleport request!");
+				requester.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GREEN + "You will teleport in " + (manager.getTeleportWarmup() / 20) + " seconds. Don't move!"));
+				manager.deleteTeleportRequest(request.getId());
+				manager.teleport(requester, player.getLocation(), new TeleportCallback() {
 
-			});
+					@Override
+					public void onTeleport(boolean success, Player player, Location previousLocation,
+										   Location newLocation, String message) {
+						if (success) {
+							requester.sendMessage(ChatColor.GREEN + " You teleported to " + player.getName() + "!");
+							player.sendMessage(ChatColor.GREEN + requester.getName() + " teleported to you!");
+						} else {
+							requester.sendMessage(ChatColor.RED + message);
+							player.sendMessage(ChatColor.RED + message);
+						}
+					}
+
+				},manager.getTeleportRequestWarmupTicks());
+			}
 
 			return true;
 		}else{
