@@ -11,7 +11,7 @@ public class SpyManager extends SystemManager {
 
     private final AmavyaAdmin plugin;
 
-    private Map<UUID, Set<CommandSender>> spyTargets = new HashMap<>();
+    private final Map<UUID, Set<CommandSender>> spyTargets = new HashMap<>();
 
     public SpyManager(AmavyaAdmin plugin) {
         super();

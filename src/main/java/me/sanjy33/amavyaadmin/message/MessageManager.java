@@ -19,7 +19,7 @@ import me.sanjy33.amavyaadmin.SystemManager;
 
 public class MessageManager extends SystemManager{
 	
-	private Map<UUID, List<String>> messages = new HashMap<UUID, List<String>>();
+	private final Map<UUID, List<String>> messages = new HashMap<UUID, List<String>>();
 	private final String fileName = "queued_messages.yml";
 	private final AmavyaAdmin plugin;
 	

@@ -2,6 +2,8 @@ package me.sanjy33.amavyaadmin.periodicmessage;
 
 import java.util.*;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -93,11 +95,11 @@ public class PeriodicMessage extends BukkitRunnable{
 			return;
 		}
 		if (message.length() > 0){
-			String s = ChatColor.translateAlternateColorCodes('&', message);
+			Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				if (permission == null || p.hasPermission(permission)) {
 					if (!manager.areMessagesDisabled(p.getUniqueId())) {
-						p.sendMessage(s);
+						p.sendMessage(component);
 					}
 				}
 			}

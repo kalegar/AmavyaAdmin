@@ -3,7 +3,13 @@ package me.sanjy33.amavyaadmin;
 import java.util.*;
 import java.util.logging.Level;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
 import me.sanjy33.amavyaadmin.inventory.Inventory;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,8 +25,6 @@ import me.sanjy33.amavyaadmin.home.PlayerHome;
 import me.sanjy33.amavyaadmin.jail.JailCell;
 import me.sanjy33.amavyaadmin.mute.MutedPlayer;
 import me.sanjy33.amavyaadmin.util.TimeParser;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class AAListener implements Listener{
 	
@@ -39,8 +43,8 @@ public class AAListener implements Listener{
     	UUID u = p.getUniqueId();
     	Set<CommandSender> spies = plugin.spyManager.getSpies(u);
     	for (CommandSender sender : spies) {
-    	    sender.sendMessage(ChatColor.AQUA + "[SPY] " + ChatColor.GRAY + p.getName() + " used command:");
-    	    sender.sendMessage(ChatColor.GRAY + event.getMessage());
+    	    sender.sendMessage(Component.text().content("[SPY]").color(NamedTextColor.AQUA).append(Component.text(p.getName() + " used command:", NamedTextColor.GRAY)));
+    	    sender.sendMessage(Component.text(event.getMessage(), NamedTextColor.GRAY));
         }
     	MutedPlayer mp = plugin.muteManager.getMutedPlayer(u);
     	if (mp != null) {
@@ -49,7 +53,11 @@ public class AAListener implements Listener{
     			if (time <= 0) {
     				plugin.muteManager.unMute(mp);
     			}else {
-    				String msg = plugin.mutedMessage.replaceAll("%time%",TimeParser.parseLong(time, false)).replaceAll("%reason%",mp.getReason());
+					String timeString = TimeParser.parseLong(time, false);
+					if (timeString == null) {
+						timeString = "0 seconds";
+					}
+    				String msg = plugin.mutedMessage.replaceAll("%time%",timeString).replaceAll("%reason%",mp.getReason());
     				p.sendMessage(msg);
     				event.setCancelled(true);
     				return;
@@ -58,7 +66,7 @@ public class AAListener implements Listener{
     	}
     	if (plugin.jailManager.isPlayerInJail(p.getUniqueId())) {
     		if (plugin.jailManager.isCommandBlocked(cmd)) {
-    			p.sendMessage(ChatColor.RED + "You can't use that command in jail!");
+    			p.sendMessage(Component.text("You can't use that command in jail.", NamedTextColor.RED));
 				event.setCancelled(true);
     		}
     	}
@@ -66,7 +74,7 @@ public class AAListener implements Listener{
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)
-	public void onPlayerChat(AsyncPlayerChatEvent event){
+	public void onPlayerChat(AsyncChatEvent event){
 		MutedPlayer mp = plugin.muteManager.getMutedPlayer(event.getPlayer().getUniqueId());
 		if (mp != null){
 			long time = mp.getUnMuteTime() - System.currentTimeMillis();
@@ -86,18 +94,20 @@ public class AAListener implements Listener{
 	@EventHandler
 	public void onSignChange(SignChangeEvent event){
 		Player p = event.getPlayer();
-		String[] lines = event.getLines();
-		if (lines[0].equalsIgnoreCase("[BuyRegion]")){
-			if (!p.hasPermission("aadmin.sign.create")){
-				p.sendMessage(ChatColor.RED + "You don't have permission!");
-				event.setCancelled(true);
-				return;
+		List<Component> lines = event.lines();
+		if (lines.get(0) instanceof TextComponent) {
+			if (((TextComponent) lines.get(0)).content().equalsIgnoreCase("[BuyRegion]")) {
+				if (!p.hasPermission("aadmin.sign.create")) {
+					p.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
+					event.setCancelled(true);
+					return;
+				}
 			}
-		}
-		if (lines[0].equalsIgnoreCase("[Sold!]")){
-			if (!p.hasPermission("aadmin.sign.create")){
-				p.sendMessage(ChatColor.RED + "You don't have permission!");
-				event.setCancelled(true);
+			if (((TextComponent) lines.get(0)).content().equalsIgnoreCase("[Sold!]")) {
+				if (!p.hasPermission("aadmin.sign.create")) {
+					p.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
@@ -108,7 +118,8 @@ public class AAListener implements Listener{
 		if (player.hasPermission("aadmin.home.bed")) {
 			if (!plugin.homeManager.homeExists(player.getUniqueId())) {
 				plugin.homeManager.setHome(new PlayerHome(player.getUniqueId(),player.getLocation(),player.getName()));
-				player.spigot().sendMessage(ChatMessageType.ACTION_BAR,new TextComponent(ChatColor.GREEN + "" + ChatColor.ITALIC + "Your home has been set to your bed location!"));
+				Component component = Component.text("Your home has been set to your bed location!", Style.style(NamedTextColor.GREEN, TextDecoration.ITALIC));
+				player.sendActionBar(component);
 			}
 		}
 		//If anyone gets out of a bed clear all sleep ignored players
@@ -118,7 +129,9 @@ public class AAListener implements Listener{
 	
 	@EventHandler
 	public void onBedEnter(PlayerBedEnterEvent event) {
-		plugin.sleepManager.checkSleepDelayed(event.getPlayer().getWorld());
+		if (event.getBedEnterResult().equals(PlayerBedEnterEvent.BedEnterResult.OK)) {
+			plugin.sleepManager.checkSleepDelayed(event.getPlayer().getWorld());
+		}
 	}
 	
 	@EventHandler
@@ -126,11 +139,11 @@ public class AAListener implements Listener{
 		Player p = event.getPlayer();
 		plugin.spyManager.removeAgent(p);
 		if (plugin.vanishManager.getSilentQuit(p.getUniqueId())) {
-			event.setQuitMessage(null);
+			event.quitMessage(null);
 			for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
 				if (pl.getUniqueId().equals(p.getUniqueId())) continue;
 				if (pl.hasPermission("aadmin.vanish.silentnotify")) {
-					pl.sendMessage(ChatColor.GRAY + "~" + p.getName() + " left the game silently~");
+					pl.sendMessage(Component.text("~" + p.getName() + " left the game silently~", NamedTextColor.GRAY));
 				}
 			}
 		}
@@ -144,10 +157,9 @@ public class AAListener implements Listener{
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		Player p = event.getPlayer();
-		String message = plugin.lockdownMessage;
 		if (plugin.lockdown){
 			if (!p.hasPermission("aadmin.lockdown.bypass")){
-				event.disallow(PlayerLoginEvent.Result.KICK_OTHER,message);
+				event.disallow(PlayerLoginEvent.Result.KICK_OTHER,Component.text(plugin.lockdownMessage));
 				return;
 			}
 		}
@@ -160,18 +172,18 @@ public class AAListener implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent event){
 		final Player p = event.getPlayer();
 		if (plugin.lockdown){
-			p.sendMessage(ChatColor.RED + "<<< The server is currently locked down! >>>");
+			p.sendMessage(Component.text("<<< The server is currently locked down! >>>", NamedTextColor.RED));
 		}
 		if (plugin.vanishManager.getSilentJoin(p.getUniqueId())) {
-			p.sendMessage(ChatColor.GRAY + "~You joined silently~");
-			event.setJoinMessage(null);
+			p.sendMessage(Component.text("~You joined silently~", NamedTextColor.GRAY));
+			event.joinMessage(null);
 			if (!plugin.vanishManager.isPlayerInvisible(p)) {
 				plugin.vanishManager.toggleInvisibility(p);
 			}
 			for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
 				if (pl.getUniqueId().equals(p.getUniqueId())) continue;
 				if (pl.hasPermission("aadmin.vanish.silentnotify")) {
-					pl.sendMessage(ChatColor.GRAY + "~" + p.getName() + " joined the game silently~");
+					pl.sendMessage(Component.text("~" + p.getName() + " joined the game silently~", NamedTextColor.GRAY));
 				}
 			}
 		}
@@ -185,21 +197,21 @@ public class AAListener implements Listener{
 		plugin.prevWorld.put(p, p.getWorld());
 		
 		if (plugin.jailManager.isToBeReleased(p.getUniqueId().toString())){
-			p.sendMessage(ChatColor.GREEN+"You have been released from jail.");
+			p.sendMessage(Component.text("You have been released from jail.", NamedTextColor.GREEN));
 			p.teleport(p.getLocation().getWorld().getSpawnLocation());
 			plugin.jailManager.removeToBeReleased(p.getUniqueId().toString());
 		}
 		
 		JailCell cell = plugin.jailManager.getCell(p.getUniqueId());
 		if (cell != null) {
-			p.sendMessage(ChatColor.RED+"You have been jailed! Use /jailstatus");
+			p.sendMessage(Component.text("You have been jailed! Use /jailstatus", NamedTextColor.RED));
 			p.teleport(cell.getLocation());
 		}
 		
 		if (p.hasPermission("aadmin.staffapps.check")){
 			int amm = plugin.staffApplicationManager.getUnreadApplicationCount();
 			if (amm>0){
-				p.sendMessage(ChatColor.AQUA + "[App] There are " + amm + " new staff applications! Use /apply check");
+				p.sendMessage(Component.text("[App] There are " + amm + " new staff applications! Use /apply check", NamedTextColor.AQUA));
 			}
 		}
 		
@@ -223,11 +235,16 @@ public class AAListener implements Listener{
             if (p.hasPermission("aadmin.back")){
                 Location loc = p.getLocation();
                 plugin.teleportManager.setDeathLocation(p, loc);
-                p.sendMessage(ChatColor.AQUA + "Death location saved! Use " + ChatColor.GREEN + "/back" + ChatColor.AQUA + " to return!");
+                p.sendMessage(Component.text("Death location saved! Use",NamedTextColor.AQUA)
+								.appendSpace()
+								.append(Component.text("/back", NamedTextColor.GREEN))
+								.appendSpace()
+								.append(Component.text("to return!",NamedTextColor.AQUA))
+				);
             }
         }else{
             if (p.hasPermission("aadmin.back")){
-                p.sendMessage(ChatColor.RED + "Your death location was not saved because you were killed by a player!");
+                p.sendMessage(Component.text("Your death location was not saved because you were killed by a player!", NamedTextColor.RED));
             }
         }
 	}
@@ -256,7 +273,7 @@ public class AAListener implements Listener{
 					if (p.getAllowFlight() && p.getGameMode().equals(GameMode.SURVIVAL)){
 						p.setAllowFlight(false);
 						p.setFallDistance(0);
-						p.sendMessage(ChatColor.RED + "You do not have permission to fly in this world!");
+						p.sendMessage(Component.text("You do not have permission to fly in this world!", NamedTextColor.RED));
 					}
 				}
 			}

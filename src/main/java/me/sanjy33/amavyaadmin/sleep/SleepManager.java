@@ -2,12 +2,11 @@ package me.sanjy33.amavyaadmin.sleep;
 
 import me.sanjy33.amavyaadmin.AmavyaAdmin;
 import me.sanjy33.amavyaadmin.SystemManager;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SleepManager extends SystemManager {
 
@@ -23,7 +21,7 @@ public class SleepManager extends SystemManager {
     private float sleepPercentageRequired = 0.5f;
     private final List<Player> sleeping = new ArrayList<>();
 
-    private HashSet<Player> sleepIgnoredPlayers;
+    private final HashSet<Player> sleepIgnoredPlayers;
 
     public SleepManager(AmavyaAdmin plugin) {
         super();
@@ -96,17 +94,18 @@ public class SleepManager extends SystemManager {
     }
 
     private void sendSleepingMessage(World world, int required, int total) {
-        ChatColor col = sleeping.size() >= required ? ChatColor.GREEN : ChatColor.GRAY;
-        TextComponent sleepingComponent = new TextComponent(col + String.valueOf(sleeping.size()));
+        TextColor col = sleeping.size() >= required ? NamedTextColor.GREEN : NamedTextColor.GRAY;
+
         StringBuilder sb = new StringBuilder();
         for (Player p : sleeping) {
             sb.append(p.getName()).append(",\n");
         }
         sb.delete(sb.length()-2,sb.length());
-        sleepingComponent.setHoverEvent( new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(sb.toString())));
-        TextComponent rest = new TextComponent(ChatColor.GOLD + "/" + total + " players are now sleeping.");
+        Component sleepingComponent = Component.text(String.valueOf(sleeping.size()), col)
+                .hoverEvent(HoverEvent.showText(Component.text(sb.toString())))
+                .append(Component.text("/" + total + " players are now sleeping.", NamedTextColor.GOLD));
         for (Player player : world.getPlayers()) {
-            player.spigot().sendMessage(ChatMessageType.CHAT,sleepingComponent,rest);
+            player.sendMessage(sleepingComponent);
         }
     }
 }

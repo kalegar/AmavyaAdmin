@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.logging.Level;
 
 import me.sanjy33.amavyaadmin.util.Utils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
@@ -117,7 +119,7 @@ public class TeleportManager extends SystemManager {
 			for (int i = 0; i < teleportRequests.size(); i++) {
 				if (teleportRequests.get(i).getId().equals(req.getId())) {
 					if (req.getFrom() != null && req.getFrom().isOnline()) {
-						req.getFrom().sendMessage(ChatColor.RED + "Your teleport request to " + req.getTo().getName() + " expired.");
+						req.getFrom().sendMessage(Component.text("Your teleport request to " + req.getTo().getName() + " expired.", NamedTextColor.RED));
 					}
 					teleportRequests.remove(i);
 					return;
@@ -190,9 +192,7 @@ public class TeleportManager extends SystemManager {
 	
 	public void deleteWarp(String name) {
 		String lower = name.toLowerCase();
-		if (warps.containsKey(lower)) {
-			warps.remove(lower);
-		}
+		warps.remove(lower);
 	}
 	
 	public Location getWarpLocation(String name) {

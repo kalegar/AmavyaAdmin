@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.papermc.paper.plugin.configuration.PluginMeta;
 import me.sanjy33.amavyaadmin.hook.AmavyaParticleLibDefault;
 import me.sanjy33.amavyaadmin.hook.AmavyaParticleLibHook;
 import me.sanjy33.amavyaadmin.hook.AmavyaParticleLibWrapper;
@@ -17,13 +18,9 @@ import me.sanjy33.amavyaadmin.tabcompleter.PermissionTabCompleter;
 import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -75,14 +72,14 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 	@Override
 	public void onDisable() {
 		save();
-		getLogger().info(ChatColor.GREEN + "[AmavyaAdmin] AmavyaAdmin Disabled");
+		getLogger().info("[AmavyaAdmin] AmavyaAdmin Disabled");
 	}
 
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
 		if (!setupLuckPerms()) {
-        	getLogger().info(ChatColor.RED + "[AmavyaAdmin] ERROR: Failed to load LuckPerms API!");
+        	getLogger().info("[AmavyaAdmin] ERROR: Failed to load LuckPerms API!");
         }
 		operatorTabCompleter = new OperatorTabCompleter();
 		permissionTabCompleter = new PermissionTabCompleter();
@@ -103,8 +100,8 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 		reload();
 		registerCommands();
 		getServer().getPluginManager().registerEvents(playerListener, this);
-		PluginDescriptionFile pdfFile = this.getDescription();
-        getLogger().info( ChatColor.GREEN + pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
+		PluginMeta pdfFile = this.getPluginMeta();
+        getLogger().info( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
 	}
 	
 	private boolean setupLuckPerms() {

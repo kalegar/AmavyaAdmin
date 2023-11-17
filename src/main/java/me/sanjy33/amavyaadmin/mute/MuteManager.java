@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import me.sanjy33.amavyaadmin.util.Utils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,7 +26,7 @@ public class MuteManager extends SystemManager {
 	private final AmavyaAdmin plugin;
 	private final String fileName = "muted_players.yml";
 
-	private Set<MutedPlayer> mutedPlayers = ConcurrentHashMap.newKeySet();
+	private final Set<MutedPlayer> mutedPlayers = ConcurrentHashMap.newKeySet();
 	private List<String> mutedCommands;
 	private BukkitTask unMuteTask = null;
 	
@@ -65,7 +67,7 @@ public class MuteManager extends SystemManager {
 		mutedPlayers.add(mp);
 		Player p = Bukkit.getPlayer(player);
 		if (p != null) {
-			p.sendMessage(ChatColor.RED + "You have been muted for " + TimeParser.parseLong(time,false) + ". Reason: " + reason);
+			p.sendMessage(Component.text("You have been muted for " + TimeParser.parseLong(time,false) + ". Reason: " + reason, NamedTextColor.RED));
 		}
 	}
 	
@@ -82,7 +84,7 @@ public class MuteManager extends SystemManager {
 		if (mutedPlayers.contains(mutedPlayer)){
 			mutedPlayers.remove(mutedPlayer);
 			if (p != null){
-				p.sendMessage(ChatColor.GREEN + "You have been unmuted!");
+				p.sendMessage(Component.text("You have been unmuted!", NamedTextColor.GREEN));
 			}
 		}
 	}
@@ -158,6 +160,9 @@ public class MuteManager extends SystemManager {
 		int total = c.getInt("total");
 		mutedPlayers.clear();
 		for (int i=0;i<total;i++) {
+			String player = c.getString(i+".player");
+			if (player == null) continue;
+
 			MutedPlayer.Muter muter;
 			String uuid = c.getString(i+".muter.uuid");
 			if (uuid == null || uuid.length() == 0) {
@@ -167,7 +172,7 @@ public class MuteManager extends SystemManager {
 			}
 
 			MutedPlayer mp = new MutedPlayer(
-					UUID.fromString(c.getString(i+".player")),
+					UUID.fromString(player),
 					muter,
 					c.getString(i+".reason"),
 					c.getLong(i+"unMuteTime"));

@@ -6,8 +6,8 @@ import java.util.UUID;
 
 public class Spy {
 
-    private CommandSender agent;
-    private UUID target;
+    private final CommandSender agent;
+    private final UUID target;
 
     public Spy(CommandSender agent, UUID target) {
         this.agent = agent;

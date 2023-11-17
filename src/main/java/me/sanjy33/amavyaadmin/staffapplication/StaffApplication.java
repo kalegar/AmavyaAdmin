@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class StaffApplication {
-	private List<String> applicationPages;
+	private final List<String> applicationPages;
 	private boolean read;
-	private UUID uuid;
-	private String lastKnownName;
+	private final UUID uuid;
+	private final String lastKnownName;
 	
 	public StaffApplication(UUID uuid, String lastKnownName, List<String> applicationPages, boolean read) {
 		this.uuid = uuid;

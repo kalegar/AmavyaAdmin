@@ -5,7 +5,7 @@ import java.util.UUID;
 public class MutedPlayer {
 	private UUID player;
 	private String reason;
-	private Muter muter;
+	private final Muter muter;
 	private long unMuteTime;
 	
 	public MutedPlayer(UUID player, Muter muter, String reason, long unMuteTime) {
@@ -47,7 +47,7 @@ public class MutedPlayer {
 	public boolean equals(Object o) {
 		if (o instanceof MutedPlayer) {
 			MutedPlayer m = (MutedPlayer) o;
-			if (this.player.equals(m.player)) return true;
+			return this.player.equals(m.player);
 		}
 		return false;
 	}

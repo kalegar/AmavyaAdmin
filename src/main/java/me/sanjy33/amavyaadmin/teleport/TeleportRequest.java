@@ -10,7 +10,7 @@ public class TeleportRequest {
     private final Player to;
     private final Player from;
     private final String id;
-    private BukkitTask timeoutTask;
+    private final BukkitTask timeoutTask;
 
     public TeleportRequest(AmavyaAdmin plugin, Player to, Player from, int timeoutTicks, TimeoutCallback onTimeout) {
         this.to = to;

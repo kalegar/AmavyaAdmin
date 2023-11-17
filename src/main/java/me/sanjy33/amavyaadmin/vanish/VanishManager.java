@@ -6,7 +6,6 @@ import java.util.logging.Level;
 
 import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 

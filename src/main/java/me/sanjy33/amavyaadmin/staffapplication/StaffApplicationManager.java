@@ -31,9 +31,9 @@ public class StaffApplicationManager extends SystemManager{
 	private final AmavyaAdmin plugin;
 	private StaffApplicationCommandExecutor commandExecutor;
 	
-	private Map<UUID,StaffApplication> applications = new HashMap<UUID,StaffApplication>();
-	private Set<UUID> applyingForStaff = new HashSet<UUID>();
-	private List<String> applicationPages = new ArrayList<String>();
+	private final Map<UUID,StaffApplication> applications = new HashMap<UUID,StaffApplication>();
+	private final Set<UUID> applyingForStaff = new HashSet<UUID>();
+	private final List<String> applicationPages = new ArrayList<String>();
 	public static String applicationAcceptedMessage = "";
 	public static String applicationDeniedMessage = "";
 	public static String applicationInProgressMessage = "";
@@ -54,13 +54,9 @@ public class StaffApplicationManager extends SystemManager{
 	
 	public void setApplyingForStaff(UUID uuid, boolean applying) {
 		if (applying) {
-			if (!applyingForStaff.contains(uuid)) {
-				applyingForStaff.add(uuid);
-			}
+			applyingForStaff.add(uuid);
 		}else {
-			if (applyingForStaff.contains(uuid)) {
-				applyingForStaff.remove(uuid);
-			}
+			applyingForStaff.remove(uuid);
 		}
 	}
 	
