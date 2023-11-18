@@ -9,7 +9,7 @@ public class JailCell {
 	private UUID occupant=null;
 	private long timeRelease=0;
 	private Location location=null;
-	private int id;
+	private final int id;
 	private String reason="Breaking server rules.";
 	private UUID jailer=null;
 	private String jailerName="Console";

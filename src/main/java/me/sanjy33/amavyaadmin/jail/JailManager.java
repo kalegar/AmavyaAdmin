@@ -27,10 +27,10 @@ public class JailManager extends SystemManager{
 
 	private List<String> blockedCommands = new ArrayList<String>();
 	private BukkitTask unJailTask = null;
-	private Map<Integer,JailCell> jailCells = new ConcurrentHashMap<>();
+	private final Map<Integer,JailCell> jailCells = new ConcurrentHashMap<>();
 	private List<String> toBeReleased = new ArrayList<String>();
 	public Long unJailCheckRate = 20*5L; //Check every five seconds
-	private Map<Integer,BukkitTask> unJailTasks = new ConcurrentHashMap<>();
+	private final Map<Integer,BukkitTask> unJailTasks = new ConcurrentHashMap<>();
 	
 	public JailManager(AmavyaAdmin plugin) {
 		super();
@@ -215,15 +215,17 @@ public class JailManager extends SystemManager{
 		for (int i=0;i<totalCells;i++){
 			JailCell p = new JailCell(i);
 			String o = c.getString(i+".occupant");
-			if (!o.equalsIgnoreCase("null")){
+			if ((o != null) && !o.equalsIgnoreCase("null")){
 				p.setOccupant(UUID.fromString(o));
 			}
 			p.setTimeWhenReleased(c.getLong(i+".timeLeft"));
-			Location l = new Location(Bukkit.getWorld(c.getString(i+".location.world")),c.getDouble(i+".location.x"),c.getDouble(i+".location.y"),c.getDouble(i+".location.z"),(float)c.getLong(i+".location.yaw"),(float)c.getLong(i+".location.pitch"));
+			String worldName = c.getString(i+".location.world");
+			if (worldName == null || worldName.length() == 0) worldName = "world";
+			Location l = new Location(Bukkit.getWorld(worldName),c.getDouble(i+".location.x"),c.getDouble(i+".location.y"),c.getDouble(i+".location.z"),(float)c.getLong(i+".location.yaw"),(float)c.getLong(i+".location.pitch"));
 			p.setLocation(l);
 			p.setReason(c.getString(i+".reason"));
 			o = c.getString(i+".jailer.uuid");
-			if (!o.equalsIgnoreCase("null")){
+			if ((o != null) && !o.equalsIgnoreCase("null")){
 				p.setJailer(UUID.fromString(o));
 			}
 			p.setJailerName(c.getString(i+".jailer.name"));

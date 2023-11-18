@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import me.sanjy33.amavyaadmin.util.Utils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -87,9 +88,9 @@ public class HomeManager extends SystemManager {
 	
 	public String getHomeList() {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(ChatColor.AQUA + "Homes: ");
+		stringBuilder.append("Homes: ");
 		for (PlayerHome home : playerHomes.values()){
-			stringBuilder.append(home.getName() + ", ");
+			stringBuilder.append(home.getName()).append(", ");
 		}
 		stringBuilder.delete(stringBuilder.length()-2, stringBuilder.length());
 		return stringBuilder.toString();

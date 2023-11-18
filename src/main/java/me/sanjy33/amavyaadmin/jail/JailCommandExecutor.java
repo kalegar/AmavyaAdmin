@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import me.sanjy33.amavyaadmin.AmavyaAdmin;
 import me.sanjy33.amavyaadmin.util.TimeParser;
+import org.jetbrains.annotations.NotNull;
 
 public class JailCommandExecutor implements CommandExecutor {
 	
@@ -25,7 +27,7 @@ public class JailCommandExecutor implements CommandExecutor {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		final Player player;
 		if (sender instanceof Player){
 			player = (Player) sender;
@@ -37,14 +39,14 @@ public class JailCommandExecutor implements CommandExecutor {
 			if (player!=null){
 				jailerName=player.getName();
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED + "You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}else{
 				jailerName = "Console";
 			}
 			if (manager.jailCellCount()<1){
-				sender.sendMessage(ChatColor.RED + "There are no prison cells! Create some with /jailcreate");
+				sender.sendMessage(Component.text("There are no prison cells! Create some with /jailcreate", NamedTextColor.RED));
 				return true;
 			}
 			if (args.length<3){
@@ -56,32 +58,35 @@ public class JailCommandExecutor implements CommandExecutor {
 					return;
 				}
 				if (manager.isPlayerInJail(uuid)){
-					sender.sendMessage(ChatColor.RED + args[0] + " is already in jail!");
+					sender.sendMessage(Component.text(args[0] + " is already in jail!", NamedTextColor.RED));
 					return;
 				}
 				long time = TimeParser.parseString(args[1]);
 				if (time==-1){
-					sender.sendMessage(ChatColor.RED + "Use this time format: 5h3m6s!");
+					sender.sendMessage(Component.text("Use this time format: 5h3m6s!", NamedTextColor.RED));
 					return;
 				}
-				String reason = args[2];
+				StringBuilder reason = new StringBuilder(args[2]);
 				for (int i=3;i<args.length;i++){
-					reason += " " + args[i];
+					reason.append(" ").append(args[i]);
 				}
-				boolean result = manager.jailPlayer(uuid, player != null ? player.getUniqueId() : null, jailerName, reason, time);
+				boolean result = manager.jailPlayer(uuid, player != null ? player.getUniqueId() : null, jailerName, reason.toString(), time);
 				if (result) {
-					sender.sendMessage(ChatColor.AQUA+"[Jail] "+ChatColor.WHITE+ args[0] + " jailed for " + TimeParser.parseLong(time,true) + ". Reason: "+reason+".");
+					sender.sendMessage(
+							Component.text("[Jail] ", NamedTextColor.AQUA)
+							.append(Component.text(args[0] + " jailed for " + TimeParser.parseLong(time,true) + ". Reason: "+reason+".", NamedTextColor.WHITE))
+					);
 					Player target = Bukkit.getPlayer(uuid);
 					if (target != null){
-						sender.sendMessage(ChatColor.GREEN + args[0] + " was jailed!");
-						target.sendMessage(ChatColor.RED + "You have been jailed by "+jailerName+" for "+TimeParser.parseLong(time, true)+". Reason: "+reason);
-						target.sendMessage(ChatColor.RED + "Use /jailstatus to check how long you have left.");
+						sender.sendMessage(Component.text(args[0] + " was jailed!", NamedTextColor.GREEN));
+						target.sendMessage(Component.text("You have been jailed by "+jailerName+" for "+TimeParser.parseLong(time, true)+". Reason: "+reason, NamedTextColor.RED));
+						target.sendMessage(Component.text("Use /jailstatus to check how long you have left.", NamedTextColor.RED));
 						target.teleport(manager.getCell(uuid).getLocation());
 					}else{
-						sender.sendMessage(ChatColor.GREEN + args[0] + " will be jailed the next time they login!");
+						sender.sendMessage(Component.text(args[0] + " will be jailed the next time they login!", NamedTextColor.GREEN));
 					}
 				}else {
-					sender.sendMessage(ChatColor.RED + " Failed to jail " + args[0] + ". No empty cells!");
+					sender.sendMessage(Component.text(" Failed to jail " + args[0] + ". No empty cells!", NamedTextColor.RED));
 				}
 			}));
 			return true;
@@ -92,18 +97,18 @@ public class JailCommandExecutor implements CommandExecutor {
 				return true;
 			}else{
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
 			JailCell cell = manager.createCell(player.getLocation());
-			player.sendMessage(ChatColor.GREEN + "Prison cell " + cell.getID() + " created!");
+			player.sendMessage(Component.text("Prison cell " + cell.getID() + " created!", NamedTextColor.GREEN));
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("jaildelete")){
 			if (player!=null){
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
@@ -112,27 +117,27 @@ public class JailCommandExecutor implements CommandExecutor {
 			}
 			int i = Integer.parseInt(args[0]);
 			if (manager.deleteCell(i)) {
-				sender.sendMessage(ChatColor.GREEN + "Prison cell deleted.");
+				sender.sendMessage(Component.text("Prison cell deleted.", NamedTextColor.GREEN));
 			}else {
-				sender.sendMessage(ChatColor.RED + "No prison cell with the id " + i + " exists!");
+				sender.sendMessage(Component.text("No prison cell with the id " + i + " exists!", NamedTextColor.RED));
 			}
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("jaildeleteall")){
 			if (player!=null){
 				if (!player.hasPermission("aadmin.jail.deleteall")){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
 			manager.clearCells();
-			sender.sendMessage(ChatColor.GREEN + "All prison cells deleted.");
+			sender.sendMessage(Component.text("All prison cells deleted.", NamedTextColor.GREEN));
 			return true;
 		}
 		if (command.getName().equalsIgnoreCase("unjail")){
 			if (player!=null){
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
@@ -148,14 +153,14 @@ public class JailCommandExecutor implements CommandExecutor {
 					Player target = Bukkit.getPlayer(uuid);
 					if (target != null && target.isOnline()){
 						target.teleport(target.getLocation().getWorld().getSpawnLocation());
-						target.sendMessage(ChatColor.GREEN + "You have been released from jail.");
-						sender.sendMessage(ChatColor.GREEN+args[0] + " was released from jail.");
+						target.sendMessage(Component.text("You have been released from jail.", NamedTextColor.GREEN));
+						sender.sendMessage(Component.text(args[0] + " was released from jail.", NamedTextColor.GREEN));
 					}else{
 						manager.addToBeReleased(uuid.toString());
-						sender.sendMessage(ChatColor.GREEN+args[0] + " will be released when they are next online.");
+						sender.sendMessage(Component.text(args[0] + " will be released when they are next online.", NamedTextColor.GREEN));
 					}
 				}else {
-					sender.sendMessage(ChatColor.RED+args[0] + " is not jailed!");
+					sender.sendMessage(Component.text(args[0] + " is not jailed!", NamedTextColor.RED));
 				}
 			}));
 			return true;
@@ -163,7 +168,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		if (command.getName().equalsIgnoreCase("unjailall")){
 			if (player!=null){
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
@@ -171,13 +176,16 @@ public class JailCommandExecutor implements CommandExecutor {
 					UUID u = p.getOccupant();
 					if (u!=null){
 						Player target = Bukkit.getPlayer(u);
+						if (target == null) {
+							continue;
+						}
 						if (target.isOnline()){
 							target.teleport(target.getLocation().getWorld().getSpawnLocation());
-							target.sendMessage(ChatColor.GREEN + "You have been released from jail.");
-							sender.sendMessage(ChatColor.GREEN+target.getName() + " was released from jail.");
+							target.sendMessage(Component.text("You have been released from jail.", NamedTextColor.GREEN));
+							sender.sendMessage(Component.text(target.getName() + " was released from jail.", NamedTextColor.GREEN));
 						}else{
 							manager.addToBeReleased(u.toString());
-							sender.sendMessage(ChatColor.GREEN+target.getName() + " will be released when they are next online.");
+							sender.sendMessage(Component.text(target.getName() + " will be released when they are next online.", NamedTextColor.GREEN));
 						}
 					}
 					p.reset();
@@ -187,7 +195,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		if (command.getName().equalsIgnoreCase("jailstatus")){
 			if (player!=null){
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
@@ -203,7 +211,7 @@ public class JailCommandExecutor implements CommandExecutor {
 			}else{
 				if (player!=null){
 					if (!player.hasPermission("aadmin.jail.status.other")){
-						player.sendMessage(ChatColor.RED+"Usage: /jailstatus");
+						player.sendMessage(Component.text("Usage: /jailstatus", NamedTextColor.RED));
 						return true;
 					}
 				}
@@ -222,7 +230,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		if (command.getName().equalsIgnoreCase("jailaddtime")){
 			if (player!=null){
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
@@ -236,13 +244,13 @@ public class JailCommandExecutor implements CommandExecutor {
 				}
 				long time = TimeParser.parseString(args[1]);
 				if (time==-1){
-					sender.sendMessage(ChatColor.RED + "Use this time format: 5h3m6s!");
+					sender.sendMessage(Component.text("Use this time format: 5h3m6s!", NamedTextColor.RED));
 					return;
 				}
 				if (manager.addTime(uuid, time)) {
-					sender.sendMessage(ChatColor.GREEN + "Successfully added time.");
+					sender.sendMessage(Component.text("Successfully added time.", NamedTextColor.GREEN));
 				} else {
-					sender.sendMessage(ChatColor.RED + args[0] + " is not jailed!");
+					sender.sendMessage(Component.text(args[0] + " is not jailed!", NamedTextColor.RED));
 				}
 			}));
 			return true;
@@ -250,7 +258,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		if (command.getName().equalsIgnoreCase("jailsubtracttime")){
 			if (player!=null){
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
@@ -264,13 +272,13 @@ public class JailCommandExecutor implements CommandExecutor {
 				}
 				long time = TimeParser.parseString(args[1]);
 				if (time==-1){
-					sender.sendMessage(ChatColor.RED + "Use this time format: 5h3m6s!");
+					sender.sendMessage(Component.text("Use this time format: 5h3m6s!", NamedTextColor.RED));
 					return;
 				}
 				if (manager.addTime(uuid, -time)) {
-					sender.sendMessage(ChatColor.GREEN + "Successfully subtracted time.");
+					sender.sendMessage(Component.text("Successfully subtracted time.", NamedTextColor.GREEN));
 				} else {
-					sender.sendMessage(ChatColor.RED + args[0] + " is not jailed!");
+					sender.sendMessage(Component.text(args[0] + " is not jailed!", NamedTextColor.RED));
 				}
 			}));
 			return true;
@@ -278,7 +286,7 @@ public class JailCommandExecutor implements CommandExecutor {
 		if (command.getName().equalsIgnoreCase("jaillist")){
 			if (player!=null){
 				if (!command.testPermission(player)){
-					player.sendMessage(ChatColor.RED+"You don't have permission!");
+					player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 					return true;
 				}
 			}
@@ -320,9 +328,9 @@ public class JailCommandExecutor implements CommandExecutor {
 			}
 		} else {
 			if (player != null && uuid.equals(player.getUniqueId())) {
-				sender.sendMessage(ChatColor.RED + "You are not in jail!");
+				sender.sendMessage(Component.text("You are not in jail!", NamedTextColor.RED));
 			}else {
-				sender.sendMessage(ChatColor.RED + name + " is not in jail!");
+				sender.sendMessage(Component.text(name + " is not in jail!", NamedTextColor.RED));
 			}
 		}
 	}
