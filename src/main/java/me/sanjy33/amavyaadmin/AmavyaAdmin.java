@@ -16,6 +16,7 @@ import me.sanjy33.amavyaadmin.spy.SpyManager;
 import me.sanjy33.amavyaadmin.tabcompleter.OperatorTabCompleter;
 import me.sanjy33.amavyaadmin.tabcompleter.PermissionTabCompleter;
 import me.sanjy33.amavyaadmin.util.Utils;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -148,7 +149,7 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 	    if (this.getConfig().contains("rules")) {
 	    	rules.clear();
 	    	List<String> stringList = this.getConfig().getStringList("rules");
-	    	stringList.forEach(rule -> rules.add(rule.replaceAll("&","§")));
+	    	stringList.forEach(rule -> rules.add(ChatColor.translateAlternateColorCodes('&',rule)));
 	    }
 	    if (this.getConfig().contains("kits.starter")){
 	    	starterKit = Inventory.load(this.getConfig().getConfigurationSection("kits.starter"));
