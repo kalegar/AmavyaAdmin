@@ -17,7 +17,6 @@ import me.sanjy33.amavyaadmin.tabcompleter.OperatorTabCompleter;
 import me.sanjy33.amavyaadmin.tabcompleter.PermissionTabCompleter;
 import me.sanjy33.amavyaadmin.util.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -149,7 +148,7 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 	    if (this.getConfig().contains("rules")) {
 	    	rules.clear();
 	    	List<String> stringList = this.getConfig().getStringList("rules");
-	    	stringList.forEach(rule -> rules.add(ChatColor.translateAlternateColorCodes('&',rule)));
+	    	stringList.forEach(rule -> rules.add(rule.replaceAll("&","§")));
 	    }
 	    if (this.getConfig().contains("kits.starter")){
 	    	starterKit = Inventory.load(this.getConfig().getConfigurationSection("kits.starter"));

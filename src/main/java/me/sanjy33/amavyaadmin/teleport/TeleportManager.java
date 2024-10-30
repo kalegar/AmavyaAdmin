@@ -8,7 +8,10 @@ import java.util.logging.Level;
 import me.sanjy33.amavyaadmin.util.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Particle;
+import org.bukkit.World;
+import org.bukkit.Location;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -69,7 +72,7 @@ public class TeleportManager extends SystemManager {
 					Location currentLocation = player.getLocation();
 					if (currentLocation.distance(previousLocation)>0.5){
 						callback.onTeleport(false, player, previousLocation, currentLocation,"Teleport cancelled due to movement.");
-						plugin.particleLibHook.addSpiralEffect(player,Particle.VILLAGER_ANGRY,20,20,0.75);
+						plugin.particleLibHook.addSpiralEffect(player, Particle.ANGRY_VILLAGER,20,20,0.75);
 						return;
 					}
 					lastLocations.remove(player);
@@ -77,12 +80,12 @@ public class TeleportManager extends SystemManager {
 				Location currentLocation = player.getLocation();
 				player.teleport(location);
 				callback.onTeleport(true, player, currentLocation, location, "Teleport Successful.");
-				plugin.particleLibHook.addBurstEffect(player, Particle.VILLAGER_HAPPY,20,4,0.75, 12);
+				plugin.particleLibHook.addBurstEffect(player, Particle.HAPPY_VILLAGER,20,4,0.75, 12);
 				teleportTasks.remove(player);
 			}
 		}, warmup);
 		teleportTasks.put(player, task);
-		plugin.particleLibHook.addDoubleSpiralEffect(player, Particle.VILLAGER_HAPPY,warmup,warmup,0.75);
+		plugin.particleLibHook.addDoubleSpiralEffect(player, Particle.HAPPY_VILLAGER,warmup,warmup,0.75);
 	}
 	
 	public boolean isDeathLocationStored(Player player) {

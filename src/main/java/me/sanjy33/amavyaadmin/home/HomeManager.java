@@ -8,9 +8,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import me.sanjy33.amavyaadmin.util.Utils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
