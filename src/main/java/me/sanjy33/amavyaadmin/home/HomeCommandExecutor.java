@@ -44,7 +44,10 @@ public class HomeCommandExecutor implements CommandExecutor {
 		}
 		if (args.length>0){
 			String subCommand = args[0];
-			String[] subArgs = Arrays.copyOfRange(args,1,args.length-1);
+			String[] subArgs = {};
+			if (args.length > 1) {
+				subArgs = Arrays.copyOfRange(args,1,args.length-1);
+			}
 			if (subCommand.equalsIgnoreCase("set")) {
 				onSetHomeCommand(sender, plugin.getCommand("sethome"), label, subArgs);
 			}else if (subCommand.equalsIgnoreCase("delete")) {
@@ -56,6 +59,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 			}else{
 				return false;
 			}
+			return true;
 		}
 		UUID targetUuid = player.getUniqueId();
 		if (!teleportToHome(player, targetUuid)) {
