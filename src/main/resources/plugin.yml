@@ -1,5 +1,5 @@
 name: AmavyaAdmin
-api-version: 1.21
+api-version: 1.21.3
 version: ${project.version}
 main: me.sanjy33.amavyaadmin.AmavyaAdmin
 softdepend: [Multiverse-Core, AmavyaParticleLib]
@@ -245,13 +245,18 @@ commands:
   deletehome:
     aliases: [delhome,homedelete,resethome,homereset]
     description: Deletes a player's home.
-    usage: /deletehome
+    usage: /deletehome <player>
     permission: aadmin.home.delete
   listhome:
     aliases: [homelist]
     description: Lists all player homes.
     usage: /listhome
     permission: aadmin.home.list
+  otherhome:
+    aliases: [homeother]
+    description: Go to another player's home.
+    usage: /otherhome <player>
+    permission: aadmin.home.other
   jail:
     description: Jails a player.
     usage: /jail <player> <time> <reason>

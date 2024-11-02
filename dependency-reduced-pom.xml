@@ -4,7 +4,7 @@
   <groupId>me.sanjy33</groupId>
   <artifactId>AmavyaAdmin</artifactId>
   <name>AmavyaAdmin</name>
-  <version>3.9.21</version>
+  <version>3.9.22</version>
   <description>A custom server administration plugin!</description>
   <url>www.timelesscraft.ca</url>
   <build>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>io.papermc.paper</groupId>
       <artifactId>paper-api</artifactId>
-      <version>1.21.1-R0.1-SNAPSHOT</version>
+      <version>1.21.3-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
