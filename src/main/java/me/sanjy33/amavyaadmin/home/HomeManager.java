@@ -36,7 +36,8 @@ public class HomeManager extends SystemManager {
 			"home",
 			"sethome",
 			"deletehome",
-			"listhome"
+			"listhome",
+			"otherhome"
 	};
 	private void registerCommands() {
 		//Home commands:

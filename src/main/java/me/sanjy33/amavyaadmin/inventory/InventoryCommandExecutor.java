@@ -2,6 +2,7 @@ package me.sanjy33.amavyaadmin.inventory;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -60,22 +61,32 @@ public class InventoryCommandExecutor implements CommandExecutor {
                 return true;
             }
             if (args[0].equalsIgnoreCase("restore") || args[0].equalsIgnoreCase("load")) {
-                if (!player.hasPermission("aadmin.inventory.restore")) {
-                    player.sendMessage(Component.text("You don't have permission.", NamedTextColor.RED));
+                if (!sender.hasPermission("aadmin.inventory.restore")) {
+                    sender.sendMessage(Component.text("You don't have permission.", NamedTextColor.RED));
                     return true;
                 }
                 if (args.length < 2) {
-                    player.sendMessage(Component.text("Usage: /inventory " + args[0] + " <inventoryname>", NamedTextColor.RED));
+                    sender.sendMessage(Component.text("Usage: /inventory " + args[0] + " <inventoryname>", NamedTextColor.RED));
                     return true;
                 }
-                UUID uuid = player.getUniqueId();
+                Player target;
+                if (args.length >= 3) {
+                    target = Bukkit.getPlayer(args[2]);
+                    if (target == null) {
+                        sender.sendMessage(Component.text("No player called " + args[2] + " was found!"));
+                        return true;
+                    }
+                } else {
+                    target = player;
+                }
+                UUID uuid = target.getUniqueId();
                 String key = args[1].toUpperCase();
                 if (!manager.isInventoryStored(uuid,key)) {
-                    player.sendMessage(Component.text("No inventory with key " + args[1] + " is stored!", NamedTextColor.RED));
+                    sender.sendMessage(Component.text("No inventory with key " + args[1] + " is stored for player " + target.getName() + "!", NamedTextColor.RED));
                     return true;
                 }
-                manager.getStoredInventory(uuid,key).setPlayerInventory(player,false);
-                player.sendMessage(Component.text("Your inventory has been restored from saved inventory '" + args[1] + "'", NamedTextColor.DARK_PURPLE));
+                manager.getStoredInventory(uuid,key).setPlayerInventory(target,true, false);
+                sender.sendMessage(Component.text(target.getName() +"'s inventory has been restored from saved inventory '" + args[1] + "'", NamedTextColor.DARK_PURPLE));
                 return true;
             }
             if (args[0].equalsIgnoreCase("clear") || args[0].equalsIgnoreCase("delete")) {

@@ -9,8 +9,5 @@
         <module name="AmavyaAdmin" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="AmavyaAdmin" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

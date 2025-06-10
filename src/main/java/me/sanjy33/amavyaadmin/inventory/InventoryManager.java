@@ -12,10 +12,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class InventoryManager extends SystemManager {
@@ -88,6 +85,7 @@ public class InventoryManager extends SystemManager {
     private static final String[] commands = {
             "inventory"
     };
+
     private void registerCommands() {
         InventoryCommandExecutor commandExecutor = new InventoryCommandExecutor(this);
         Utils.registerAndSetupCommands(plugin,commands, commandExecutor,plugin.permissionTabCompleter);

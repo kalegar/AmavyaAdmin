@@ -6,7 +6,7 @@
 
     <groupId>me.sanjy33</groupId>
     <artifactId>AmavyaAdmin</artifactId>
-    <version>3.9.23</version>
+    <version>3.9.24</version>
     <packaging>jar</packaging>
 
     <name>AmavyaAdmin</name>
@@ -33,7 +33,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -41,7 +41,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
                 </executions>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.3-R0.1-SNAPSHOT</version>
+            <version>1.21.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>me.sanjy33</groupId>
             <artifactId>AmavyaParticleLib</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>1.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

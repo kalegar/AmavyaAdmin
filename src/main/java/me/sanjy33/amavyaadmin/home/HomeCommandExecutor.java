@@ -38,6 +38,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 			return true;
 		}else{
 			if (!command.testPermission(player)){
+				// TODO: Remove permission messages? Calling testPermission seems to send a message already.
 				player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 				return true;
 			}
@@ -49,17 +50,16 @@ public class HomeCommandExecutor implements CommandExecutor {
 				subArgs = Arrays.copyOfRange(args,1,args.length-1);
 			}
 			if (subCommand.equalsIgnoreCase("set")) {
-				onSetHomeCommand(sender, plugin.getCommand("sethome"), label, subArgs);
+				return onSetHomeCommand(sender, plugin.getCommand("sethome"), label, subArgs);
 			}else if (subCommand.equalsIgnoreCase("delete")) {
-				onDeleteHomeCommand(sender, plugin.getCommand("deletehome"), label, subArgs);
+				return onDeleteHomeCommand(sender, plugin.getCommand("deletehome"), label, subArgs);
 			}else if (subCommand.equalsIgnoreCase("list")) {
-				onListHomeCommand(sender, plugin.getCommand("listhome"), label, subArgs);
+				return onListHomeCommand(sender, plugin.getCommand("listhome"), label, subArgs);
 			}else if (subCommand.equalsIgnoreCase("other")) {
-				onOtherHomeCommand(sender, plugin.getCommand("otherhome"), label, subArgs);
+				return onOtherHomeCommand(sender, plugin.getCommand("otherhome"), label, subArgs);
 			}else{
 				return false;
 			}
-			return true;
 		}
 		UUID targetUuid = player.getUniqueId();
 		if (!teleportToHome(player, targetUuid)) {

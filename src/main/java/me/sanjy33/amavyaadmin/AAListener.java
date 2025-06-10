@@ -284,6 +284,7 @@ public class AAListener implements Listener{
 
 	@EventHandler
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
+		if (event.getCause().equals(PlayerGameModeChangeEvent.Cause.PLUGIN)) return;
 		Player player = event.getPlayer();
 		GameMode newGameMode = event.getNewGameMode();
 		GameMode oldGameMode = player.getGameMode();
