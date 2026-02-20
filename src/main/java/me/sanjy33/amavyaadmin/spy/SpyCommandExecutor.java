@@ -28,7 +28,7 @@ public class SpyCommandExecutor implements CommandExecutor {
             player = (Player) sender;
         }
         if (command.getName().equalsIgnoreCase("spy")) {
-            if (player != null && !command.testPermission(player)) {
+            if (player != null && !command.testPermissionSilent(player)) {
                 player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
                 return true;
             }

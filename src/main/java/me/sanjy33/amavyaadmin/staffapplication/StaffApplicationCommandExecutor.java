@@ -46,6 +46,7 @@ public class StaffApplicationCommandExecutor implements CommandExecutor {
 				return true;
 			}
 			if (StaffApplicationManager.simpleApplications) {
+				manager.showDialog(player);
 				sender.sendMessage(StaffApplicationManager.applicationSimpleMessage);
 				return true;
 			}
@@ -76,7 +77,7 @@ public class StaffApplicationCommandExecutor implements CommandExecutor {
 					StaffApplication app = new StaffApplication(
 							uuid,
 							player.getName(),
-							pages,
+							null,
 							false);
 					manager.addApplication(app);
 					manager.setApplyingForStaff(uuid, false);
@@ -173,7 +174,7 @@ public class StaffApplicationCommandExecutor implements CommandExecutor {
 						return true;
 					}
 					app.setRead(true);
-					List<String> pages = app.getApplicationPages();
+					List<String> pages = List.copyOf(app.getFields().values());
 					ItemStack i = new ItemStack(Material.WRITTEN_BOOK, 1);
 					BookMeta b = (BookMeta) i.getItemMeta();
 					b.setTitle("Staff Application");

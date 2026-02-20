@@ -37,7 +37,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 			sender.sendMessage("This command can't be used in the console.");
 			return true;
 		}else{
-			if (!command.testPermission(player)){
+			if (!command.testPermissionSilent(player)){
 				// TODO: Remove permission messages? Calling testPermission seems to send a message already.
 				player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 				return true;
@@ -77,7 +77,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 			sender.sendMessage("This command can't be used in the console.");
 			return true;
 		}else{
-			if (!command.testPermission(player)){
+			if (!command.testPermissionSilent(player)){
 				player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 				return true;
 			}
@@ -103,7 +103,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 			sender.sendMessage("This command can't be used in the console.");
 			return true;
 		}else{
-			if (!command.testPermission(player)){
+			if (!command.testPermissionSilent(player)){
 				player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 				return true;
 			}
@@ -144,7 +144,7 @@ public class HomeCommandExecutor implements CommandExecutor {
 			player = (Player) sender;
 		}
 		if (player!=null){
-			if (!command.testPermission(player)){
+			if (!command.testPermissionSilent(player)){
 				player.sendMessage(Component.text("You don't have permission!", NamedTextColor.RED));
 				return true;
 			}

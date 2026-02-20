@@ -3,6 +3,8 @@ package me.sanjy33.amavyaadmin;
 import java.util.*;
 import java.util.logging.Level;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import io.papermc.paper.event.connection.PlayerConnectionValidateLoginEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.sanjy33.amavyaadmin.inventory.Inventory;
 import net.kyori.adventure.text.Component;

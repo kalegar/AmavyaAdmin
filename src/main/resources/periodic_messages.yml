@@ -5,5 +5,5 @@ periodicmessages:
     permission: 'default'
     mode: 0
     messages:
-      - 'Default Message'
-      - 'Default Message 2'
+      - '{"text":"Default Message 1","color":"white"}'
+      - '{"text":"Default Message 1","color":"white"}'

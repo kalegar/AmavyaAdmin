@@ -1,18 +1,20 @@
 package me.sanjy33.amavyaadmin.staffapplication;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class StaffApplication {
-	private final List<String> applicationPages;
+	private final Map<String, String> fields = new HashMap<>();
 	private boolean read;
 	private final UUID uuid;
 	private final String lastKnownName;
 	
-	public StaffApplication(UUID uuid, String lastKnownName, List<String> applicationPages, boolean read) {
+	public StaffApplication(UUID uuid, String lastKnownName, Map<String, String> fields, boolean read) {
 		this.uuid = uuid;
 		this.lastKnownName = lastKnownName;
-		this.applicationPages = applicationPages;
+		this.fields.putAll(fields);
 		this.read = read;
 	}
 	
@@ -23,11 +25,11 @@ public class StaffApplication {
 	public String getLastKnownName() {
 		return lastKnownName;
 	}
-	
-	public List<String> getApplicationPages() {
-		return applicationPages;
+
+	public Map<String, String> getFields() {
+		return fields;
 	}
-	
+
 	public boolean isRead() {
 		return read;
 	}

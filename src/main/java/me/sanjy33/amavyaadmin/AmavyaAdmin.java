@@ -124,7 +124,7 @@ public class AmavyaAdmin extends JavaPlugin implements Listener{
 	}
 
 	private static final String[] opCommands = {"lockdown","aareload"};
-	private static final String[] commands = {"fly","motd","ts","rules","setkit","tips","knownaliases"};
+	private static final String[] commands = {"fly","motd","ts","rules","setkit","knownaliases"};
 	
 	private void registerCommands(){
 		Utils.registerAndSetupCommands(this,opCommands,commandExecutor,operatorTabCompleter);

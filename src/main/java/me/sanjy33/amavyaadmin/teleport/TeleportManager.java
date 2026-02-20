@@ -16,7 +16,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.sanjy33.amavyaadmin.AmavyaAdmin;
@@ -54,11 +54,24 @@ public class TeleportManager extends SystemManager {
 	public void teleport(Player player, Location location, TeleportCallback callback) {
 		teleport(player,location,callback,teleportWarmup);
 	}
-	
+
+	/**
+	 * Get a player's location, corrected for cases where they are riding in a vehicle.
+	 * @param player Player to get location for
+	 * @return copy of Location for player (or vehicle if inside one)
+	 */
+	public Location getPlayerLocation(Player player) {
+		if (player.isInsideVehicle()) {
+			return player.getVehicle().getLocation();
+		} else {
+			return player.getLocation();
+		}
+	}
+
 	public void teleport(Player player, Location location, TeleportCallback callback, Long warmup) {
 		UUID uuid = player.getUniqueId();
 		//Store current location
-		lastLocations.put(player, player.getLocation());
+		lastLocations.put(player, getPlayerLocation(player));
 		if (teleportTasks.containsKey(player)) {
 			teleportTasks.get(player).cancel();
 		}
@@ -67,18 +80,26 @@ public class TeleportManager extends SystemManager {
 			public void run() {
 				Player player = Bukkit.getPlayer(uuid);
 				if (player==null) return;
+				Location currentLocation = getPlayerLocation(player);
 				if (lastLocations.containsKey(player)){
 					Location previousLocation = lastLocations.get(player);
-					Location currentLocation = player.getLocation();
-					if (currentLocation.distance(previousLocation)>0.5){
+
+					plugin.getLogger().info("Last Loc: " + previousLocation.getX() + ", " + previousLocation.getY() + ", " + previousLocation.getZ());
+					plugin.getLogger().info("Current Loc: " + currentLocation.getX() + ", " + currentLocation.getY() + ", " + currentLocation.getZ());
+					if (currentLocation.distance(previousLocation)>1.0){
 						callback.onTeleport(false, player, previousLocation, currentLocation,"Teleport cancelled due to movement.");
 						plugin.particleLibHook.addSpiralEffect(player, Particle.ANGRY_VILLAGER,20,20,0.75);
 						return;
 					}
 					lastLocations.remove(player);
 				}
-				Location currentLocation = player.getLocation();
-				player.teleport(location);
+				// If player is riding a horse or other living entity, teleport that entity. (Except Happy Ghasts)
+				if (player.isInsideVehicle() && (player.getVehicle() instanceof LivingEntity) && !(player.getVehicle() instanceof HappyGhast)) {
+					Vehicle vehicleEntity = (Vehicle) player.getVehicle();
+					vehicleEntity.teleport(location);
+				}else {
+					player.teleport(location);
+				}
 				callback.onTeleport(true, player, currentLocation, location, "Teleport Successful.");
 				plugin.particleLibHook.addBurstEffect(player, Particle.HAPPY_VILLAGER,20,4,0.75, 12);
 				teleportTasks.remove(player);

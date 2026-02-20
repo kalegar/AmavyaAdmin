@@ -32,7 +32,7 @@ public class AACommandExecutor implements CommandExecutor{
 					player = (Player) sender;
 				}
 				if (command.getName().equalsIgnoreCase("knownaliases")) {
-					if (player != null && !command.testPermission(player)) {
+					if (player != null && !command.testPermissionSilent(player)) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
@@ -57,23 +57,9 @@ public class AACommandExecutor implements CommandExecutor{
 					});
 					return true;
 				}
-				if (command.getName().equalsIgnoreCase("tips")){
-					if (player!=null){
-						if (!command.testPermission(player)){
-							player.sendMessage(ChatColor.RED + "You don't have permission!");
-							return true;
-						}
-					}else{
-						sender.sendMessage("That can't be used in the console!");
-						return true;
-					}
-					String status = plugin.periodicMessageManager.toggleMessagesDisabled(player.getUniqueId()) ? ChatColor.GREEN+"ON" : ChatColor.RED + "OFF";
-					player.sendMessage(ChatColor.GREEN + "Messages toggled "+status+ChatColor.GREEN+"!");
-					return true;
-				}
 				if (command.getName().equalsIgnoreCase("setkit")){
 					if (player!=null){
-						if (!command.testPermission(player)){
+						if (!command.testPermissionSilent(player)){
 							player.sendMessage(ChatColor.RED + "You don't have permission!");
 							return true;
 						}
@@ -89,7 +75,7 @@ public class AACommandExecutor implements CommandExecutor{
 				}
 				if (command.getName().equalsIgnoreCase("rules")){
 					if (player!=null){
-						if (!command.testPermission(player)){
+						if (!command.testPermissionSilent(player)){
 							player.sendMessage(ChatColor.RED + "You don't have permission!");
 							return true;
 						}
@@ -106,7 +92,7 @@ public class AACommandExecutor implements CommandExecutor{
 				}
 				if (command.getName().equalsIgnoreCase("aareload")){
 					if (!(player==null)){
-						if (!command.testPermission(player)){
+						if (!command.testPermissionSilent(player)){
 							player.sendMessage(ChatColor.RED + "You don't have permission!");
 							return true;
 						}
@@ -130,7 +116,7 @@ public class AACommandExecutor implements CommandExecutor{
 						}
 						return true;
 					}
-					if (!command.testPermission(player)){
+					if (!command.testPermissionSilent(player)){
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
@@ -185,7 +171,7 @@ public class AACommandExecutor implements CommandExecutor{
 						}
 					}else{
 						if (args.length < 1){
-							if (!command.testPermission(player)){
+							if (!command.testPermissionSilent(player)){
 								player.sendMessage(ChatColor.RED + "You don't have permission!");
 								return true;
 							}
@@ -221,7 +207,7 @@ public class AACommandExecutor implements CommandExecutor{
 				}
 				if (command.getName().equalsIgnoreCase("lockdown")){
 					if (player!=null){
-						if (!command.testPermission(player)){
+						if (!command.testPermissionSilent(player)){
 							player.sendMessage(ChatColor.RED + "You don't have permission!");
 							return true;
 						}
@@ -245,7 +231,7 @@ public class AACommandExecutor implements CommandExecutor{
 						plugin.messageOfTheDay.sendMotd(player);
 						return true;
 					}
-					if (player != null && !command.testPermission(player)) {
+					if (player != null && !command.testPermissionSilent(player)) {
 						player.sendMessage(ChatColor.RED + "You don't have permission!");
 						return true;
 					}
