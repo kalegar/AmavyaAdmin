@@ -84,8 +84,6 @@ public class TeleportManager extends SystemManager {
 				if (lastLocations.containsKey(player)){
 					Location previousLocation = lastLocations.get(player);
 
-					plugin.getLogger().info("Last Loc: " + previousLocation.getX() + ", " + previousLocation.getY() + ", " + previousLocation.getZ());
-					plugin.getLogger().info("Current Loc: " + currentLocation.getX() + ", " + currentLocation.getY() + ", " + currentLocation.getZ());
 					if (currentLocation.distance(previousLocation)>1.0){
 						callback.onTeleport(false, player, previousLocation, currentLocation,"Teleport cancelled due to movement.");
 						plugin.particleLibHook.addSpiralEffect(player, Particle.ANGRY_VILLAGER,20,20,0.75);
